@@ -90,18 +90,8 @@ export function hasValidSession(request: Request) {
 
 export async function authenticateUser(email: string, password: string) {
   const normalizedEmail = normalizeEmail(email);
-  let result = await db.select().from(siteUsers).where(eq(siteUsers.email, normalizedEmail)).limit(1);
-  let user = result[0];
-
-  const adminEmail = normalizeEmail(process.env.SITE_ADMIN_EMAIL ?? "");
-  const adminPassword = process.env.SITE_ADMIN_PASSWORD ?? "";
-  if (!user && adminEmail && adminPassword && normalizedEmail === adminEmail && password === adminPassword) {
-    const created = await db
-      .insert(siteUsers)
-      .values({ name: "Administrador", email: adminEmail, passwordHash: passwordHash(password), role: "admin" })
-      .returning();
-    user = created[0];
-  }
+  const result = await db.select().from(siteUsers).where(eq(siteUsers.email, normalizedEmail)).limit(1);
+  const user = result[0];
 
   if (!user || !user.isActive || !passwordMatches(password, user.passwordHash)) return null;
 
