@@ -10,17 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AcessoRouteImport } from './routes/acesso'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AutorRouteImport } from './routes/autor'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as LivroRouteImport } from './routes/livro'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
 import { Route as CapitulosSlugRouteImport } from './routes/capitulos.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcessoRoute = AcessoRouteImport.update({
+  id: '/acesso',
+  path: '/acesso',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -53,6 +60,11 @@ const SobreRoute = SobreRouteImport.update({
   path: '/sobre',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => AdminRoute,
+} as any)
 const CapitulosSlugRoute = CapitulosSlugRouteImport.update({
   id: '/capitulos/$slug',
   path: '/capitulos/$slug',
@@ -61,71 +73,84 @@ const CapitulosSlugRoute = CapitulosSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/acesso': typeof AcessoRoute
+  '/admin': typeof AdminRouteWithChildren
   '/autor': typeof AutorRoute
   '/contato': typeof ContatoRoute
   '/livro': typeof LivroRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
   '/capitulos/$slug': typeof CapitulosSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/acesso': typeof AcessoRoute
+  '/admin': typeof AdminRouteWithChildren
   '/autor': typeof AutorRoute
   '/contato': typeof ContatoRoute
   '/livro': typeof LivroRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
   '/capitulos/$slug': typeof CapitulosSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/acesso': typeof AcessoRoute
+  '/admin': typeof AdminRouteWithChildren
   '/autor': typeof AutorRoute
   '/contato': typeof ContatoRoute
   '/livro': typeof LivroRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
   '/capitulos/$slug': typeof CapitulosSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/acesso'
     | '/admin'
     | '/autor'
     | '/contato'
     | '/livro'
     | '/sitemap.xml'
     | '/sobre'
+    | '/admin/usuarios'
     | '/capitulos/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/acesso'
     | '/admin'
     | '/autor'
     | '/contato'
     | '/livro'
     | '/sitemap.xml'
     | '/sobre'
+    | '/admin/usuarios'
     | '/capitulos/$slug'
   id:
     | '__root__'
     | '/'
+    | '/acesso'
     | '/admin'
     | '/autor'
     | '/contato'
     | '/livro'
     | '/sitemap.xml'
     | '/sobre'
+    | '/admin/usuarios'
     | '/capitulos/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AcessoRoute: typeof AcessoRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AutorRoute: typeof AutorRoute
   ContatoRoute: typeof ContatoRoute
   LivroRoute: typeof LivroRoute
@@ -141,6 +166,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/acesso': {
+      id: '/acesso'
+      path: '/acesso'
+      fullPath: '/acesso'
+      preLoaderRoute: typeof AcessoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -185,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SobreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/usuarios': {
+      id: '/admin/usuarios'
+      path: '/usuarios'
+      fullPath: '/admin/usuarios'
+      preLoaderRoute: typeof AdminUsuariosRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/capitulos/$slug': {
       id: '/capitulos/$slug'
       path: '/capitulos/$slug'
@@ -195,9 +234,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminUsuariosRoute: typeof AdminUsuariosRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminUsuariosRoute: AdminUsuariosRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AcessoRoute: AcessoRoute,
+  AdminRoute: AdminRouteWithChildren,
   AutorRoute: AutorRoute,
   ContatoRoute: ContatoRoute,
   LivroRoute: LivroRoute,

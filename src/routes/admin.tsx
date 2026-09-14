@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import { PageTransition } from "@/components/Motion";
 import { getChapters, saveChapter } from "@/db/chapters.functions";
+import { getSessionUser, logout } from "@/lib/auth.functions";
 
 type ChapterRow = {
   id?: string;
@@ -34,9 +35,6 @@ type ChapterForm = {
   is_published: boolean;
 };
 
-const STORAGE_KEY = "tramas:admin-authorized";
-const DEFAULT_PASSWORD = "tramas-admin-2026";
-
 const emptyForm = (): ChapterForm => ({
   id: "",
   title: "",
@@ -67,26 +65,34 @@ export const Route = createFileRoute("/admin")({
 
 function AdminPage() {
   const [authorized, setAuthorized] = useState(false);
-  const [password, setPassword] = useState("");
+  const [checking, setChecking] = useState(true);
   const [status, setStatus] = useState(
-    "Digite a senha para acessar a área privada.",
+    "Verificando sua sessão...",
   );
   const [chapters, setChapters] = useState<ChapterRow[]>([]);
   const [form, setForm] = useState<ChapterForm>(emptyForm());
   const [loading, setLoading] = useState(false);
 
-  const adminPassword = (
-    import.meta.env["VITE_ADMIN_PASSWORD"] || DEFAULT_PASSWORD
-  ).trim();
-
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-
-    if (stored === "1") {
-      setAuthorized(true);
-      void loadChapters();
-    }
+    void bootstrap();
   }, []);
+
+  async function bootstrap() {
+    try {
+      const user = await getSessionUser();
+      if (user?.role === "admin") {
+        setAuthorized(true);
+        await loadChapters();
+        setStatus(`Sessão ativa como ${user.email}.`);
+      } else {
+        setStatus(user ? "Sua conta não tem acesso de administrador." : "Entre com sua conta para acessar o painel.");
+      }
+    } catch {
+      setStatus("Não foi possível verificar sua sessão.");
+    } finally {
+      setChecking(false);
+    }
+  }
 
   async function loadChapters() {
     setLoading(true);
@@ -118,19 +124,6 @@ function AdminPage() {
       setStatus(`Erro ao carregar capítulos: ${message}`);
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
-
-    if (password === adminPassword) {
-      localStorage.setItem(STORAGE_KEY, "1");
-      setAuthorized(true);
-      setStatus("Acesso liberado. Você pode editar os capítulos.");
-      await loadChapters();
-    } else {
-      setStatus("Senha incorreta. Tente novamente.");
     }
   }
 
@@ -193,6 +186,16 @@ function AdminPage() {
     });
   }
 
+  if (checking) {
+    return (
+      <PageTransition>
+        <main className="mx-auto flex min-h-screen max-w-2xl items-center justify-center px-4 py-28 sm:px-6">
+          <p className="text-sm text-muted-foreground">Verificando acesso...</p>
+        </main>
+      </PageTransition>
+    );
+  }
+
   if (!authorized) {
     return (
       <PageTransition>
@@ -203,35 +206,13 @@ function AdminPage() {
             </p>
 
             <h1 className="mt-4 font-display text-3xl font-semibold">
-              Administração dos textos
+              Acesso de administrador
             </h1>
 
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Esta área é exclusiva para edição dos capítulos do livro. Defina
-              a senha de acesso no ambiente da aplicação para entrar.
+              Entre pela tela de acesso com uma conta de administrador para gerenciar capítulos e usuários.
             </p>
-
-            <form onSubmit={handleLogin} className="mt-8 space-y-4">
-              <label className="block text-sm font-medium">
-                Senha
-
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-background/70 px-4 py-3 text-sm outline-none ring-0"
-                  placeholder="Digite a senha"
-                />
-              </label>
-
-              <button
-                type="submit"
-                className="rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
-              >
-                Entrar
-              </button>
-            </form>
-
+            <a href="/acesso" className="mt-8 inline-flex rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90">Ir para o login</a>
             <p className="mt-4 text-sm text-muted-foreground">{status}</p>
           </section>
         </main>
@@ -254,13 +235,14 @@ function AdminPage() {
               </h1>
             </div>
 
+            <nav className="glass flex items-center gap-1 rounded-2xl p-1" aria-label="Administração">
+              <Link to="/admin" className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">Capítulos</Link>
+              <Link to="/admin/usuarios" className="rounded-xl px-4 py-2 text-sm text-muted-foreground transition hover:bg-white/5 hover:text-foreground">Usuários</Link>
+            </nav>
+
             <button
               type="button"
-              onClick={() => {
-                localStorage.removeItem(STORAGE_KEY);
-                setAuthorized(false);
-                setStatus("Sessão encerrada.");
-              }}
+              onClick={async () => { await logout(); window.location.href = "/acesso"; }}
               className="rounded-2xl border border-white/10 px-4 py-2 text-sm"
             >
               Sair

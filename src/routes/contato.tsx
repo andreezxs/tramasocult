@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Instagram, Mail, MessageCircle } from "lucide-react";
+import { Check, Copy, Instagram, Mail, MessageCircle, Smartphone } from "lucide-react";
+import { useState } from "react";
 import { PageTransition, Reveal } from "@/components/Motion";
+import { GlassButton } from "@/components/GlassButton";
 
 export const Route = createFileRoute("/contato")({
   head: () => ({
@@ -41,7 +43,21 @@ const channels = [
   },
 ];
 
+const pixKey = "14084657956";
+
 function ContactPage() {
+  const [copied, setCopied] = useState(false);
+
+  const copyPix = async () => {
+    try {
+      await navigator.clipboard.writeText(pixKey);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2400);
+    } catch {
+      setCopied(false);
+    }
+  };
+
   return (
     <PageTransition>
       <div className="mx-auto max-w-3xl px-4 pb-10 pt-36 sm:px-6">
@@ -80,6 +96,41 @@ function ContactPage() {
             </Reveal>
           ))}
         </div>
+
+        <Reveal delay={0.24}>
+          <section className="glass-panel mt-10 overflow-hidden p-6 sm:p-8" aria-labelledby="doar">
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-center lg:gap-10">
+              <div className="flex min-w-0 items-start gap-4">
+                <span className="glass grid h-12 w-12 shrink-0 place-items-center rounded-2xl text-primary">
+                  <Smartphone className="h-5 w-5" aria-hidden />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-[0.64rem] uppercase tracking-[0.24em] text-primary">Apoie o projeto</p>
+                  <h2 id="doar" className="mt-2 max-w-md font-display text-2xl font-semibold leading-tight">
+                    Faça uma doação via Pix
+                  </h2>
+                  <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
+                    Se esta leitura tocou você, sua contribuição ajuda a manter o projeto vivo.
+                  </p>
+                </div>
+              </div>
+
+              <div className="w-full lg:w-72">
+                <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                  <span className="block text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground">Chave Pix</span>
+                  <code className="mt-2 block text-base font-semibold tracking-[0.08em] text-foreground">{pixKey}</code>
+                </div>
+                <GlassButton type="button" variant="glass" onClick={copyPix} className="mt-3 w-full">
+                  {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
+                  {copied ? "Pix copiado" : "Copiar chave Pix"}
+                </GlassButton>
+                <p className="mt-2 text-left text-[0.65rem] leading-relaxed text-muted-foreground">
+                  Abra seu banco e cole em Pix Copia e Cola.
+                </p>
+              </div>
+            </div>
+          </section>
+        </Reveal>
       </div>
     </PageTransition>
   );

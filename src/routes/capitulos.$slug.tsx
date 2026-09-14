@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Clock, Share2, Check } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { chaptersQuery, chapterNeighbors } from "@/lib/chapters";
 import { PageTransition, Reveal } from "@/components/Motion";
@@ -58,6 +58,58 @@ function ChapterPage() {
   const { chapter, previous, next } = chapterNeighbors(chapters, slug);
   const [shared, setShared] = useState(false);
 
+  useEffect(() => {
+    const isEditable = (target: EventTarget | null) => {
+      const element = target as HTMLElement | null;
+      return element?.matches("input, textarea, select, [contenteditable='true']") ?? false;
+    };
+
+    const blockClipboard = (event: ClipboardEvent) => {
+      if (!isEditable(event.target)) event.preventDefault();
+    };
+
+    const blockContextMenu = (event: MouseEvent) => {
+      if (!isEditable(event.target)) event.preventDefault();
+    };
+
+    const blockSelection = (event: Event) => {
+      if (!isEditable(event.target)) event.preventDefault();
+    };
+
+    const blockShortcuts = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+      const commandKey = event.ctrlKey || event.metaKey;
+      const blockedCommand = commandKey && ["c", "x", "v", "p", "s", "u"].includes(key);
+      const blockedDevTools = commandKey && event.shiftKey && ["i", "j", "c"].includes(key);
+      const blockedSystemCapture = event.key === "PrintScreen";
+
+      if (!isEditable(event.target) && (blockedCommand || blockedDevTools || blockedSystemCapture || event.key === "F12")) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
+
+    document.body.classList.add("protected-reading-active");
+    document.addEventListener("copy", blockClipboard, true);
+    document.addEventListener("cut", blockClipboard, true);
+    document.addEventListener("paste", blockClipboard, true);
+    document.addEventListener("contextmenu", blockContextMenu, true);
+    document.addEventListener("selectstart", blockSelection, true);
+    document.addEventListener("dragstart", blockSelection, true);
+    document.addEventListener("keydown", blockShortcuts, true);
+
+    return () => {
+      document.body.classList.remove("protected-reading-active");
+      document.removeEventListener("copy", blockClipboard, true);
+      document.removeEventListener("cut", blockClipboard, true);
+      document.removeEventListener("paste", blockClipboard, true);
+      document.removeEventListener("contextmenu", blockContextMenu, true);
+      document.removeEventListener("selectstart", blockSelection, true);
+      document.removeEventListener("dragstart", blockSelection, true);
+      document.removeEventListener("keydown", blockShortcuts, true);
+    };
+  }, []);
+
   if (!chapter) return null;
 
   const paragraphs = chapter.content.split("\n").filter((p) => p.trim().length > 0);
@@ -81,13 +133,13 @@ function ChapterPage() {
     <PageTransition>
       <ReadingProgress />
 
-      <article className="mx-auto max-w-3xl px-4 pb-10 pt-32 sm:px-6">
+      <article className="protected-reading mx-auto max-w-3xl select-none px-4 pb-10 pt-32 sm:px-6">
         <motion.header
           initial={{ opacity: 0, y: 24, filter: "blur(10px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="glass-panel edge-lit relative overflow-hidden p-8 sm:p-10">
+          <div className="glass-panel edge-lit relative overflow-hidden p-6 sm:p-10">
             <div className="absolute inset-0 ambient-light opacity-60" aria-hidden />
             <div className="relative">
               <div className="flex flex-wrap items-center gap-3 text-[0.64rem] uppercase tracking-[0.24em] text-muted-foreground">
