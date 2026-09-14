@@ -40,8 +40,13 @@ const siteAccessMiddleware = createMiddleware().server(async ({ next, request })
   const isAsset = url.pathname.startsWith("/assets/") || url.pathname.includes(".");
   const isServerFunction = request.headers.get("x-tsr-serverfn") === "true";
   const hasAccess = await hasValidSession(request);
+  const requiresAuth =
+    url.pathname === "/livro" ||
+    url.pathname.startsWith("/capitulos/") ||
+    url.pathname === "/admin" ||
+    url.pathname.startsWith("/admin/");
 
-  if (isAccessPage || isAsset || isServerFunction || hasAccess) return next();
+  if (isAccessPage || isAsset || isServerFunction || hasAccess || !requiresAuth) return next();
 
   return new Response(null, {
     status: 302,
