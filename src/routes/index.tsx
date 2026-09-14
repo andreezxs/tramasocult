@@ -67,24 +67,25 @@ function Home() {
     <PageTransition>
       <section
         ref={heroRef}
-        className="relative mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-center px-4 pb-16 pt-32 sm:px-6"
+        className="relative mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-center px-3 pb-14 pt-28 sm:px-6 sm:pt-32"
       >
-        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
-          <motion.div style={{ y: textY }}>
-            <motion.p
-              initial={{ opacity: 0, y: 14 }}
+        <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+          <motion.div style={{ y: textY }} className="max-w-full">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-              className="text-[0.66rem] uppercase tracking-[0.32em] text-primary"
+              transition={{ duration: 0.75, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+              className="mb-5 flex flex-wrap items-center gap-2"
             >
-              eBook interativo · {chapters.length} capítulos
-            </motion.p>
+              <span className="ios-chip text-primary">eBook interativo</span>
+              <span className="ios-chip">{chapters.length} capítulos</span>
+            </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 22, filter: "blur(12px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 1, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              className="title-gradient mt-5 font-display text-[2.6rem] font-semibold leading-[1.03] sm:text-6xl lg:text-[4.1rem]"
+              className="title-gradient mt-5 max-w-[12ch] font-display text-[2.7rem] font-medium leading-[0.82] tracking-[-0.085em] sm:max-w-none sm:text-[4.2rem] lg:text-[5.1rem]"
             >
               Tramas Ocultas
               <span className="block text-foreground/85">Vozes da Vida</span>
@@ -94,7 +95,7 @@ function Home() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg"
+              className="mt-6 max-w-xl text-[0.98rem] leading-relaxed text-muted-foreground sm:text-lg"
             >
               {BOOK.subtitle} Um livro escrito a partir de palavras e temas definidos — cada termo
               simples virou história, interpretação e reflexão. Aqui ele deixa de ser PDF e passa a
@@ -105,7 +106,7 @@ function Home() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-9 flex flex-wrap items-center gap-3"
+              className="mt-8 flex flex-wrap items-center gap-2.5 sm:gap-3"
             >
               {first && (
                 <GlassLink
@@ -120,6 +121,17 @@ function Home() {
               <GlassLink to="/livro" variant="glass">
                 Explorar Capítulos
               </GlassLink>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.7 }}
+              className="mt-6 flex flex-wrap gap-2 text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground sm:text-[0.66rem]"
+            >
+              <span className="ios-chip">Leitura imersiva</span>
+              <span className="ios-chip">Design editorial</span>
+              <span className="ios-chip">Trilha sonora</span>
             </motion.div>
 
             <motion.p

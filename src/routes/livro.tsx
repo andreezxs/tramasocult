@@ -36,13 +36,15 @@ function BookPage() {
 
   return (
     <PageTransition>
-      <div className="mx-auto max-w-6xl px-4 pb-8 pt-36 sm:px-6">
+      <div className="mx-auto max-w-6xl px-3 pb-8 pt-28 sm:px-6 sm:pt-36">
         <Reveal>
-          <p className="text-[0.66rem] uppercase tracking-[0.32em] text-primary">O Livro</p>
-          <h1 className="title-gradient mt-4 font-display text-4xl font-semibold sm:text-5xl">
+          <p className="text-[0.62rem] uppercase tracking-[0.28em] text-primary sm:text-[0.66rem]">
+            O Livro
+          </p>
+          <h1 className="title-gradient mt-4 font-display text-3xl font-semibold sm:text-5xl">
             Capítulos em ordem
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
+          <p className="mt-5 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground sm:text-base">
             {chapters.length} capítulos, aproximadamente {total} minutos de leitura. Comece pelo
             início ou escolha a voz que combina com o seu momento.
           </p>

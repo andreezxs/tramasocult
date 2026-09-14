@@ -3,8 +3,8 @@ import { BOOK } from "@/lib/chapters";
 
 export function SiteFooter() {
   return (
-    <footer className="relative mx-auto mt-28 w-full max-w-6xl px-4 pb-10 sm:px-6">
-      <div className="glass-panel flex flex-col gap-6 p-7 sm:flex-row sm:items-center sm:justify-between">
+    <footer className="relative mx-auto mt-20 w-full max-w-6xl px-3 pb-8 sm:mt-28 sm:px-6 sm:pb-10">
+      <div className="glass-panel flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-7">
         <div>
           <p className="font-display text-base font-semibold">{BOOK.title}</p>
           <p className="mt-1 text-sm text-muted-foreground">

@@ -9,9 +9,9 @@ export function ChapterCard({ chapter, index = 0 }: { chapter: Chapter; index?: 
       whileHover={{ y: -6, rotateX: 1.5, rotateY: -1.5 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       style={{ transformPerspective: 900 }}
-      className="glass-panel edge-lit group flex h-full flex-col p-6"
+      className="glass-panel edge-lit group flex h-full flex-col p-4 sm:p-6"
     >
-      <div className="flex items-center justify-between text-[0.62rem] uppercase tracking-[0.2em] text-muted-foreground">
+      <div className="flex items-center justify-between gap-2 text-[0.58rem] uppercase tracking-[0.18em] text-muted-foreground sm:text-[0.62rem]">
         <span>Capítulo {String(chapter.chapter_order).padStart(2, "0")}</span>
         <span className="inline-flex items-center gap-1.5">
           <Clock className="h-3 w-3" aria-hidden />
@@ -19,15 +19,19 @@ export function ChapterCard({ chapter, index = 0 }: { chapter: Chapter; index?: 
         </span>
       </div>
 
-      <h3 className="mt-4 font-display text-xl font-semibold tracking-tight">{chapter.title}</h3>
+      <h3 className="mt-4 font-display text-xl font-semibold tracking-tight sm:text-[1.35rem]">
+        {chapter.title}
+      </h3>
 
       {chapter.keyword && (
-        <p className="mt-2 text-[0.7rem] uppercase tracking-[0.18em] text-primary">
+        <p className="mt-2 text-[0.68rem] uppercase tracking-[0.16em] text-primary sm:text-[0.7rem]">
           Palavra-base · {chapter.keyword}
         </p>
       )}
 
-      <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">{chapter.summary}</p>
+      <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground sm:text-[0.96rem]">
+        {chapter.summary}
+      </p>
 
       <Link
         to="/capitulos/$slug"

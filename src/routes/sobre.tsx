@@ -49,12 +49,12 @@ const steps = [
 function AboutPage() {
   return (
     <PageTransition>
-      <div className="mx-auto max-w-4xl px-4 pb-10 pt-36 sm:px-6">
+      <div className="mx-auto max-w-4xl px-3 pb-10 pt-28 sm:px-6 sm:pt-36">
         <Reveal>
-          <p className="text-[0.66rem] uppercase tracking-[0.32em] text-primary">
+          <p className="text-[0.62rem] uppercase tracking-[0.28em] text-primary sm:text-[0.66rem]">
             Sobre o projeto
           </p>
-          <h1 className="title-gradient mt-4 font-display text-4xl font-semibold sm:text-5xl">
+          <h1 className="title-gradient mt-4 font-display text-3xl font-semibold sm:text-5xl">
             Um livro construído a partir de palavras
           </h1>
         </Reveal>

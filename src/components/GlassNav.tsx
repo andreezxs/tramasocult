@@ -54,26 +54,31 @@ export function GlassNav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6 sm:pt-5">
+    <header className="fixed inset-x-0 top-0 z-50 px-2 pt-2.5 sm:px-6 sm:pt-5">
       <motion.nav
         initial={{ y: -28, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="glass-bar edge-lit mx-auto flex max-w-6xl items-center justify-between rounded-3xl px-4 py-2.5 sm:px-5"
+        className="glass-bar edge-lit mx-auto flex max-w-6xl items-center justify-between rounded-[22px] px-2.5 py-2 sm:px-4"
       >
-        <Link to="/" className="group flex items-center gap-2.5" aria-label={BOOK.title}>
-          <span className="glass grid h-8 w-8 place-items-center rounded-xl text-primary transition-transform duration-500 group-hover:rotate-6">
+        <Link to="/" className="group flex min-w-0 items-center gap-2.5" aria-label={BOOK.title}>
+          <span className="glass grid h-9 w-9 shrink-0 place-items-center rounded-2xl text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition-transform duration-500 group-hover:rotate-6">
             <BookOpen className="h-4 w-4" />
           </span>
-          <span className="flex flex-col leading-none">
-            <span className="font-display text-[0.82rem] font-semibold tracking-tight">
+          <span className="flex min-w-0 flex-col leading-none">
+            <span className="truncate font-display text-[0.72rem] font-medium tracking-[-0.05em] text-foreground/95 sm:text-[0.82rem]">
               Tramas Ocultas
             </span>
-            <span className="text-[0.62rem] uppercase tracking-[0.22em] text-muted-foreground">
+            <span className="hidden text-[0.58rem] uppercase tracking-[0.2em] text-muted-foreground sm:block">
               Vozes da Vida
             </span>
           </span>
         </Link>
+
+        <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5 text-[0.6rem] font-medium uppercase tracking-[0.22em] text-muted-foreground xl:flex">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(74,222,128,0.7)]" />
+          Leitura em fluxo
+        </div>
 
         <ul className="hidden items-center gap-1 md:flex">
           {links.map((l) => (
@@ -91,7 +96,7 @@ export function GlassNav() {
           ))}
         </ul>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <Link
             to="/admin"
             aria-label="Área privada"
@@ -99,7 +104,9 @@ export function GlassNav() {
           >
             <Lock className="h-4 w-4" />
           </Link>
-          <SoundControl />
+          <div className="hidden sm:block">
+            <SoundControl />
+          </div>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}

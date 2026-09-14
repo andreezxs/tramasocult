@@ -41,9 +41,9 @@
   --color-glass-edge: var(--glass-edge);
   --color-ink: var(--ink);
 
-  --font-display: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
-  --font-sans: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
-  --font-reading: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-display: "SF Pro Display", "SF Pro Text", "New York", "Iowan Old Style", "Georgia", serif;
+  --font-sans: "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-reading: "New York", "Iowan Old Style", "Georgia", "Times New Roman", serif;
 }
 
 :root {
@@ -142,7 +142,15 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    letter-spacing: -0.022em;
+    letter-spacing: -0.04em;
+    font-weight: 600;
+    text-wrap: balance;
+    text-rendering: optimizeLegibility;
+  }
+
+  .title-gradient {
+    text-shadow: 0 0 32px oklch(0.875 0.185 124 / 18%);
+    letter-spacing: -0.055em;
   }
 
   :focus-visible {
@@ -246,9 +254,9 @@
 
 @utility reading-body {
   font-family: var(--font-reading);
-  font-size: 1.175rem;
-  line-height: 1.85;
-  letter-spacing: -0.003em;
+  font-size: clamp(1.1rem, 1.1vw + 0.9rem, 1.45rem);
+  line-height: 1.8;
+  letter-spacing: -0.01em;
   color: oklch(0.92 0.004 250);
 }
 
@@ -296,6 +304,49 @@
     inset: 0;
     background: linear-gradient(90deg, transparent, oklch(1 0 0 / 10%), transparent);
     animation: shimmer-pass 1.6s infinite;
+  }
+}
+
+@utility ios-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid oklch(1 0 0 / 10%);
+  background: oklch(1 0 0 / 4%);
+  backdrop-filter: blur(18px);
+  border-radius: 999px;
+  padding: 0.5rem 0.75rem;
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 8%);
+}
+
+@layer base {
+  body {
+    background:
+      radial-gradient(circle at top, oklch(0.875 0.185 124 / 10%) 0%, transparent 28%),
+      radial-gradient(circle at bottom right, oklch(0.685 0.185 32 / 12%) 0%, transparent 25%),
+      var(--background);
+    background-attachment: fixed;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  ::selection {
+    background: oklch(0.875 0.185 124 / 30%);
+  }
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 15px;
+  }
+
+  .glass-panel,
+  .glass-bar {
+    border-radius: 22px;
   }
 }
 
