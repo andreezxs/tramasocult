@@ -80,6 +80,10 @@ async function getUserFromCookie(cookieHeader: string | undefined): Promise<Auth
   return { ...user, role: user.role };
 }
 
+export function getUserFromRequest(request: Request): Promise<AuthUser | null> {
+  return getUserFromCookie(request.headers.get("cookie") ?? undefined);
+}
+
 export function getCurrentUser(): Promise<AuthUser | null> {
   return getUserFromCookie(getRequestHeader("cookie"));
 }

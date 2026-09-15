@@ -28,8 +28,8 @@ function AccessPage() {
     setError("");
 
     try {
-      await loginUser({ data: { email, password } });
-      await navigate({ to: "/" });
+      const user = await loginUser({ data: { email, password } });
+      await navigate({ to: user.role === "admin" ? "/admin" : "/livro" });
     } catch {
       setError("Código de acesso inválido.");
     } finally {

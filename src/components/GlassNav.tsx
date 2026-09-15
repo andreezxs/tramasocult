@@ -94,7 +94,8 @@ export function GlassNav() {
         <div className="flex items-center gap-1.5 sm:gap-2">
           <Link
             to="/admin"
-            aria-label="Área privada"
+            aria-label="Área do administrador"
+            title="Área do administrador"
             className="glass grid h-9 w-9 place-items-center rounded-full text-foreground/85 transition-all duration-300 hover:scale-105 hover:text-primary"
           >
             <Lock className="h-4 w-4" />

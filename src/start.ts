@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-start";
 
 import { renderErrorPage } from "./lib/error-page";
-import { hasValidSession } from "./lib/auth";
+import { getUserFromRequest } from "./lib/auth";
 
 const errorMiddleware = createMiddleware().server(async ({ next }) => {
   try {
@@ -39,19 +39,32 @@ const siteAccessMiddleware = createMiddleware().server(async ({ next, request })
   const isAccessPage = url.pathname === "/acesso";
   const isAsset = url.pathname.startsWith("/assets/") || url.pathname.includes(".");
   const isServerFunction = request.headers.get("x-tsr-serverfn") === "true";
-  const hasAccess = await hasValidSession(request);
+  const user = await getUserFromRequest(request);
   const requiresAuth =
     url.pathname === "/livro" ||
     url.pathname.startsWith("/capitulos/") ||
     url.pathname === "/admin" ||
     url.pathname.startsWith("/admin/");
 
-  if (isAccessPage || isAsset || isServerFunction || hasAccess || !requiresAuth) return next();
+  if (isAccessPage || isAsset || isServerFunction || !requiresAuth) return next();
 
-  return new Response(null, {
-    status: 302,
-    headers: { Location: `/acesso?from=${encodeURIComponent(url.pathname)}` },
-  });
+  if (!user) {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: `/acesso?from=${encodeURIComponent(url.pathname)}` },
+    });
+  }
+
+  if (url.pathname === "/admin" || url.pathname.startsWith("/admin/")) {
+    if (user.role !== "admin") {
+      return new Response(null, {
+        status: 302,
+        headers: { Location: "/livro?aviso=admin" },
+      });
+    }
+  }
+
+  return next();
 });
 
 export const startInstance = createStart(() => ({
