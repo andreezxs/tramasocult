@@ -68,7 +68,7 @@ function ContactPage() {
           </h1>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
             Impressões sobre a leitura, convites, parcerias ou apenas uma palavra nova para o próximo
-            capítulo — toda mensagem é lida.
+            capítulo toda mensagem é lida.
           </p>
         </Reveal>
 

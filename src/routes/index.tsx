@@ -165,7 +165,6 @@ function Home() {
               <div className="hero-3d-caption hero-3d-caption-bottom">
                 <BookOpen className="h-3.5 w-3.5" aria-hidden="true" /> {chapters.length} capítulos vivos
               </div>
-              <span className="immersive-stage-label">Aproxime o olhar</span>
             </div>
           </motion.div>
         </div>
@@ -223,13 +222,13 @@ function Home() {
           <div className="glass-panel grain relative overflow-hidden p-8 sm:p-12">
             <p className="eyebrow text-accent">Como os textos nasceram</p>
             <h2 id="origem" className="mt-4 font-display text-2xl font-semibold sm:text-3xl">
-              Palavras definidas, temas específicos, interpretações livres.
+              Palavras definidas, temas específicos, interpretações livres...
             </h2>
             <p className="reading-body mt-5 max-w-3xl">
-              Antes de cada capítulo existia apenas uma palavra — fio, silêncio, casa, voz, tempo — e
-              um tema para guiar o olhar. A tarefa era transformar esse ponto de partida mínimo em
-              narrativa: escutar o que o termo carregava, encontrar as vozes escondidas nele e
-              escrever até que virasse história, reflexão ou memória.
+              Antes de cada capítulo existia apenas uma palavra no caminho algum tema para guiar o olhar. A tarefa era transformar esse ponto de partida mínimo em
+              narrativa: escutar o que o termo carregava, encontrar palavras escondidas nele e
+              escrever até que virasse história, reflexão ou memória real. Cada capítulo é resultado de um processo de escrita que mistura disciplina, intuição e
+              experimentação, e que se repete a cada novo texto publicado.
             </p>
             <Link
               to="/sobre"

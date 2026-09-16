@@ -38,7 +38,6 @@ export function ImmersiveBookScene() {
     };
 
     const scratch = (event: PointerEvent) => {
-      if (event.pointerType === "touch") return;
       const bounds = canvas.getBoundingClientRect();
       const x = event.clientX - bounds.left;
       const y = event.clientY - bounds.top;
@@ -53,9 +52,11 @@ export function ImmersiveBookScene() {
     };
 
     resize();
+    canvas.addEventListener("pointerdown", scratch);
     canvas.addEventListener("pointermove", scratch);
     window.addEventListener("resize", resize);
     return () => {
+      canvas.removeEventListener("pointerdown", scratch);
       canvas.removeEventListener("pointermove", scratch);
       window.removeEventListener("resize", resize);
     };
@@ -75,7 +76,7 @@ export function ImmersiveBookScene() {
       />
       <canvas ref={coatingRef} className="scratch-book-coating" aria-hidden="true" />
       <div className="scratch-book-instruction" aria-hidden="true">
-        <span /> Passe o mouse para revelar
+        <span /> Aproxime o olhar · passe o mouse para revelar
       </div>
     </div>
   );

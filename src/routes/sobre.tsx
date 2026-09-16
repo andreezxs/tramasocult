@@ -27,7 +27,7 @@ const steps = [
   {
     n: "01",
     title: "A palavra",
-    text: "Cada capítulo começa com um único termo escolhido previamente — nada além dele.",
+    text: "Cada capítulo começa com um único termo escolhido previamente nada além dele.",
   },
   {
     n: "02",
@@ -63,18 +63,15 @@ function AboutPage() {
           <div className="glass-panel grain relative mt-10 overflow-hidden p-8 sm:p-11">
             <p className="reading-body">
               <span className="text-primary">Tramas Ocultas: Vozes da Vida</span> não começou como
-              livro. Começou como exercício. A proposta era simples e exigente ao mesmo tempo:
-              receber uma palavra, receber um tema, e escrever até que aquele ponto de partida
-              mínimo revelasse algo que ainda não havia sido dito.
+              livro. 
             </p>
             <p className="reading-body mt-6">
-              O resultado são textos que atravessam sentimentos, perspectivas e memórias — histórias
-              que existem por baixo do visível. Nenhum capítulo tenta explicar a palavra que o
-              originou; todos tentam escutá-la.
+              O resultado são textos que atravessam sentimentos, perspectivas, histórias
+              que existem por baixo do visível.
             </p>
             <p className="reading-body mt-6">
               Esta versão web substitui o PDF tradicional. Em lugar de páginas estáticas, a obra
-              ganha profundidade, luz, movimento e som — mantendo o conforto de leitura sempre em
+              ganha profundidade, luz, movimento e som mantendo o conforto de leitura sempre em
               primeiro lugar.
             </p>
           </div>

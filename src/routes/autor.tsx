@@ -49,9 +49,9 @@ function AuthorPage() {
                 desejo de que ler também fosse uma experiência visual.
               </p>
               <p className="reading-body mt-6">
-                A obra reúne textos criados como exercício contínuo de criação — cada capítulo é uma
+                A obra reúne textos criados como exercício contínuo de criação cada capítulo é uma
                 tentativa de escutar o que existe por baixo de um conceito simples e devolvê-lo em
-                forma de história.
+                forma de história real com pensamento crítico.
               </p>
               <a
                 href="https://instagram.com/designerandrecmg"
