@@ -418,6 +418,354 @@
     background-position: center center;
   }
 
+  .hero-3d-stage {
+    touch-action: pan-y;
+  }
+
+  .immersive-hero {
+    isolation: isolate;
+  }
+
+  .immersive-hero::before {
+    content: "";
+    position: absolute;
+    inset: 4% -12% 8%;
+    z-index: -1;
+    background:
+      radial-gradient(ellipse at 70% 45%, rgb(171 224 84 / 12%), transparent 32%),
+      radial-gradient(ellipse at 72% 54%, rgb(250 85 60 / 10%), transparent 44%),
+      linear-gradient(90deg, transparent 0 48%, rgb(255 255 255 / 2%) 48.1% 48.2%, transparent 48.3%);
+    mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+    pointer-events: none;
+  }
+
+  .hero-3d-scene {
+    position: relative;
+    min-height: clamp(37rem, 74vh, 52rem);
+  }
+
+  .immersive-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    cursor: crosshair;
+  }
+
+  .immersive-canvas canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .scratch-book {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    isolation: isolate;
+    cursor: crosshair;
+    filter: drop-shadow(0 32px 32px rgb(0 0 0 / 38%));
+  }
+
+  .scratch-book-cover,
+  .scratch-book-coating {
+    position: absolute;
+    top: 7%;
+    left: 18%;
+    width: 64%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    border-radius: 1.5rem;
+  }
+
+  .scratch-book-cover {
+    z-index: 1;
+    object-fit: contain;
+    border: 1px solid rgb(255 255 255 / 28%);
+    box-shadow: 0 24px 44px rgb(0 0 0 / 38%);
+    transition: filter 700ms var(--apple), transform 700ms var(--apple);
+  }
+
+  .scratch-book-coating {
+    z-index: 2;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 16%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 24%), inset 0 -16px 30px rgb(0 0 0 / 24%);
+    cursor: crosshair;
+  }
+
+  .scratch-book-light {
+    position: absolute;
+    inset: 3% 10%;
+    z-index: 0;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgb(171 224 84 / 20%), transparent 65%);
+    filter: blur(30px);
+  }
+
+  .scratch-book-instruction {
+    position: absolute;
+    right: 6%;
+    bottom: 2%;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgb(245 242 234 / 48%);
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transition: opacity 500ms ease;
+  }
+
+  .scratch-book-instruction span {
+    width: 0.42rem;
+    height: 0.42rem;
+    border: 1px solid var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--green);
+  }
+
+  @media (max-width: 640px) {
+    .scratch-book-cover,
+    .scratch-book-coating {
+      top: 9%;
+      left: 15%;
+      width: 70%;
+      height: auto;
+      aspect-ratio: 2 / 3;
+    }
+
+    .scratch-book-instruction {
+      right: 4%;
+      font-size: 0.5rem;
+      letter-spacing: 0.1em;
+    }
+  }
+
+  .kinetic-band {
+    position: relative;
+    overflow: hidden;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    padding: 1.7rem 0 1.9rem;
+    border-top: 1px solid rgb(255 255 255 / 9%);
+    border-bottom: 1px solid rgb(255 255 255 / 9%);
+    background: rgb(255 255 255 / 2%);
+    transform: rotate(-1.3deg) scale(1.02);
+  }
+
+  .kinetic-track {
+    display: flex;
+    width: max-content;
+    align-items: center;
+    gap: 2.2rem;
+    color: var(--offwhite);
+    font-family: var(--font-editorial);
+    font-size: clamp(2rem, 5vw, 5.4rem);
+    line-height: 0.82;
+    letter-spacing: -0.045em;
+    white-space: nowrap;
+    animation: kinetic-drift 32s linear infinite;
+  }
+
+  .kinetic-mark {
+    color: var(--green);
+    font-family: var(--font-sans);
+    font-size: 0.5em;
+  }
+
+  @keyframes kinetic-drift {
+    from { transform: translateX(-12%); }
+    to { transform: translateX(-58%); }
+  }
+
+  .portal-frame,
+  .portal-depth {
+    position: absolute;
+    inset: 4% 7% 5%;
+    border: 1px solid rgb(255 255 255 / 14%);
+    border-radius: 48% 48% 42% 42% / 38% 38% 58% 58%;
+    transform: rotateX(58deg) rotateZ(-8deg) translateZ(-65px);
+    box-shadow: 0 0 0 1px rgb(171 224 84 / 9%), 0 0 80px rgb(171 224 84 / 8%);
+    pointer-events: none;
+  }
+
+  .portal-frame::before {
+    content: "";
+    position: absolute;
+    inset: 8%;
+    border: 1px solid rgb(250 85 60 / 18%);
+    border-radius: inherit;
+  }
+
+  .portal-depth {
+    inset: 10% 13% 1%;
+    border-color: rgb(171 224 84 / 19%);
+    transform: rotateX(58deg) rotateZ(18deg) translateZ(-110px);
+  }
+
+  .hero-3d-halo {
+    position: absolute;
+    inset: 13% 8% 12%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgb(171 224 84 / 22%), transparent 66%);
+    filter: blur(24px);
+    transform: translateZ(-80px) scale(0.9);
+  }
+
+  .hero-3d-orbit {
+    position: absolute;
+    border: 1px solid rgb(255 255 255 / 12%);
+    border-radius: 50%;
+    transform-style: preserve-3d;
+    pointer-events: none;
+  }
+
+  .hero-3d-orbit-one {
+    inset: 9% 17% 15%;
+    transform: rotateX(68deg) rotateZ(-16deg) translateZ(-30px);
+  }
+
+  .hero-3d-orbit-two {
+    inset: 17% 7% 8%;
+    border-color: rgb(250 85 60 / 20%);
+    transform: rotateX(68deg) rotateZ(28deg) translateZ(-60px);
+  }
+
+  .hero-book {
+    position: absolute;
+    inset: 1% 14% 0;
+    transform: translateZ(110px) rotateZ(-6deg) rotateX(3deg);
+    transform-style: preserve-3d;
+    filter: drop-shadow(28px 34px 28px rgb(0 0 0 / 48%));
+  }
+
+  .hero-book-depth,
+  .hero-book-cover {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 1.8rem 1.2rem 1.2rem 1.8rem;
+  }
+
+  .hero-book-depth {
+    background: repeating-linear-gradient(90deg, #b7a78b 0 2px, #6d624f 2px 3px, #d9c9a9 3px 5px);
+    transform: translateX(13px) translateZ(-18px);
+    box-shadow: inset -8px 0 12px rgb(0 0 0 / 40%);
+  }
+
+  .hero-book-cover {
+    border: 1px solid rgb(255 255 255 / 28%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 22%), inset -10px 0 20px rgb(0 0 0 / 20%);
+    transform: translateZ(18px);
+  }
+
+  .hero-book-cover img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-book-sheen {
+    position: absolute;
+    inset: -20% 35% -20% -55%;
+    background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 30%), transparent 65%);
+    transform: translateX(-20%) rotate(8deg);
+    animation: book-sheen 8s var(--ease-glass) infinite;
+    pointer-events: none;
+  }
+
+  .hero-3d-caption {
+    position: absolute;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid rgb(255 255 255 / 12%);
+    border-radius: 999px;
+    background: rgb(5 5 6 / 42%);
+    color: var(--text-dim);
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    backdrop-filter: blur(18px);
+    transform: translateZ(120px);
+  }
+
+  .hero-3d-caption-top {
+    top: 8%;
+    right: 1%;
+  }
+
+  .hero-3d-caption-bottom {
+    bottom: 8%;
+    left: 2%;
+  }
+
+  .immersive-stage-label {
+    position: absolute;
+    right: 8%;
+    bottom: 1%;
+    color: rgb(245 242 234 / 42%);
+    font-size: 0.56rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    transform: translateZ(90px);
+  }
+
+  .hero-3d-dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 12px var(--green);
+  }
+
+  @keyframes book-sheen {
+    0%, 45% { transform: translateX(-60%) rotate(8deg); opacity: 0; }
+    58% { opacity: 1; }
+    74%, 100% { transform: translateX(180%) rotate(8deg); opacity: 0; }
+  }
+
+  @media (max-width: 640px) {
+    .hero-3d-scene {
+      min-height: 35rem;
+    }
+
+    .hero-book {
+      inset: 7% 17% 5%;
+    }
+
+    .portal-frame {
+      inset: 8% 3% 6%;
+    }
+
+    .portal-depth {
+      inset: 14% 8% 3%;
+    }
+
+    .hero-3d-caption {
+      font-size: 0.5rem;
+      letter-spacing: 0.11em;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-3d-scene {
+      transition: none;
+      transform: none;
+    }
+
+    .hero-book-sheen,
+    .float-slow,
+    .kinetic-track {
+      animation: none;
+    }
+  }
+
   .soft-glow {
     box-shadow: 0 0 0 1px rgb(255 255 255 / 8%), 0 18px 50px -24px rgb(171 224 84 / 38%);
   }

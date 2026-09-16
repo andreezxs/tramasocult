@@ -2,13 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowRight, BookOpen, Feather, Sparkles, Clock } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 
 import { chaptersQuery, BOOK } from "@/lib/chapters";
 import { Reveal, PageTransition } from "@/components/Motion";
 import { GlassLink } from "@/components/GlassButton";
 import { ChapterCard } from "@/components/ChapterCard";
-import cover from "@/assets/book-cover.svg";
+import { ImmersiveBookScene } from "@/components/ImmersiveBookScene";
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) => {
@@ -67,7 +67,7 @@ function Home() {
     <PageTransition>
       <section
         ref={heroRef}
-        className="premium-spotlight relative mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-center px-3 pb-14 pt-28 sm:px-6 sm:pt-32"
+        className="immersive-hero premium-spotlight relative mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-center px-3 pb-14 pt-28 sm:px-6 sm:pt-32"
       >
         <div className="grid items-center gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:gap-12">
           <motion.div style={{ y: textY }} className="max-w-full">
@@ -131,12 +131,12 @@ function Home() {
                   params={{ slug: first.slug }}
                   ariaLabel={`Começar a leitura pelo capítulo ${first.title}`}
                 >
-                  Começar a Leitura
+                  Entrar na experiência
                   <ArrowRight className="h-4 w-4" aria-hidden />
                 </GlassLink>
               )}
               <GlassLink to="/livro" variant="glass">
-                Explorar
+                Abrir o mapa
               </GlassLink>
             </motion.div>
 
@@ -151,22 +151,38 @@ function Home() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 40, rotateY: -8 }}
-            animate={{ opacity: 1, y: 0, rotateY: 0 }}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            style={{ y: coverY, scale: coverScale, transformPerspective: 1200 }}
-            className="relative mx-auto w-full max-w-[29rem]"
+            style={{ y: coverY, scale: coverScale }}
+            className="hero-3d-stage relative mx-auto w-full max-w-[32rem]"
           >
-            <div className="premium-shell soft-glow float-slow overflow-hidden p-3">
-              <img
-                src={cover}
-                alt="Capa do livro Tramas Ocultas: Vozes da Vida — camadas de vidro translúcido com fios entrelaçados em verde e laranja"
-                width={1024}
-                height={1536}
-                className="w-full rounded-[1.75rem] object-cover"
-              />
+            <div className="hero-3d-scene scratch-stage">
+              <ImmersiveBookScene />
+              <div className="hero-3d-caption hero-3d-caption-top">
+                <span className="hero-3d-dot" aria-hidden="true" /> Edição digital · 2026
+              </div>
+              <div className="hero-3d-caption hero-3d-caption-bottom">
+                <BookOpen className="h-3.5 w-3.5" aria-hidden="true" /> {chapters.length} capítulos vivos
+              </div>
+              <span className="immersive-stage-label">Aproxime o olhar</span>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      <section className="kinetic-band" aria-label="Manifesto da obra">
+        <div className="kinetic-track" aria-hidden="true">
+          <span>PALAVRAS QUE RESPIRAM</span>
+          <span className="kinetic-mark">✦</span>
+          <span>VOZES QUE FICAM</span>
+          <span className="kinetic-mark">✦</span>
+          <span>TRAMAS OCULTAS</span>
+          <span className="kinetic-mark">✦</span>
+          <span>PALAVRAS QUE RESPIRAM</span>
+          <span className="kinetic-mark">✦</span>
+          <span>VOZES QUE FICAM</span>
+          <span className="kinetic-mark">✦</span>
         </div>
       </section>
 

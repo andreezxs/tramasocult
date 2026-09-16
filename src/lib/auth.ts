@@ -46,7 +46,7 @@ function readSessionToken(cookieHeader = getRequestHeader("cookie")) {
 }
 
 function setSessionCookie(token: string) {
-  const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
+  const secure = process.env["NODE_ENV"] === "production" ? "; Secure" : "";
   setResponseHeader(
     "Set-Cookie",
     `${SESSION_COOKIE}=${token}; Max-Age=${SESSION_MAX_AGE}; Path=/; HttpOnly; SameSite=Lax${secure}`,
@@ -80,6 +80,23 @@ async function getUserFromCookie(cookieHeader: string | undefined): Promise<Auth
   return { ...user, role: user.role };
 }
 
+async function ensureInitialAdmin(email: string, password: string) {
+  const adminEmail = process.env["SITE_ADMIN_EMAIL"]?.trim().toLowerCase();
+  const adminPassword = process.env["SITE_ADMIN_PASSWORD"];
+  if (!adminEmail || !adminPassword || email !== adminEmail || password !== adminPassword) return;
+
+  const existingUser = await db.select({ id: siteUsers.id }).from(siteUsers).limit(1);
+  if (existingUser[0]) return;
+
+  await db.insert(siteUsers).values({
+    name: "Administrador",
+    email: adminEmail,
+    passwordHash: passwordHash(adminPassword),
+    role: "admin",
+    isActive: true,
+  });
+}
+
 export function getUserFromRequest(request: Request): Promise<AuthUser | null> {
   return getUserFromCookie(request.headers.get("cookie") ?? undefined);
 }
@@ -94,6 +111,7 @@ export function hasValidSession(request: Request) {
 
 export async function authenticateUser(email: string, password: string) {
   const normalizedEmail = normalizeEmail(email);
+  await ensureInitialAdmin(normalizedEmail, password);
   const result = await db.select().from(siteUsers).where(eq(siteUsers.email, normalizedEmail)).limit(1);
   const user = result[0];
 

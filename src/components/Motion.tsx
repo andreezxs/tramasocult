@@ -28,7 +28,7 @@ export function Reveal({
       className={className}
       initial={reduce ? { opacity: 0 } : { opacity: 0, y, filter: "blur(10px)" }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      style={reduce ? undefined : { opacity: scrollOpacity, scale: scrollScale, transformOrigin: "center center" }}
+      style={reduce ? {} : { opacity: scrollOpacity, scale: scrollScale, transformOrigin: "center center" }}
       viewport={{ once: true, margin: "-10%" }}
       transition={{
         duration: 0.9,
