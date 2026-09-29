@@ -6,11 +6,8 @@ import tailwindcss from "@tailwindcss/vite";
 import viteTsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [
-    tanstackStart(),
-    nitro(),
-    viteReact(),
-    tailwindcss(),
-    viteTsconfigPaths(),
-  ],
+  plugins: [tanstackStart(), nitro(), viteReact(), tailwindcss(), viteTsconfigPaths()],
+  server: {
+    allowedHosts: [".monkeycode-ai.live"],
+  },
 });

@@ -1,15 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
+import { Magnetic } from "@/components/Motion";
 
 const base =
-  "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full border border-white/10 px-6 py-3 text-sm font-semibold tracking-[-0.01em] shadow-[0_12px_32px_rgba(0,0,0,0.26)] transition-all duration-500 backdrop-blur-xl before:absolute before:inset-0 before:bg-[linear-gradient(135deg,rgba(255,255,255,0.3),transparent_38%,transparent_62%,rgba(255,255,255,0.12))] before:opacity-90 before:content-[''] after:absolute after:inset-y-0 after:-left-1/2 after:w-1/3 after:-skew-x-12 after:bg-white/35 after:blur-md after:opacity-0 after:transition-all after:duration-700 after:content-[''] hover:after:left-[130%] hover:after:opacity-100 active:shadow-[0_6px_18px_rgba(0,0,0,0.3)]";
+  "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full border border-white/10 px-5 py-2.5 text-sm font-semibold tracking-[-0.01em] shadow-[0_12px_32px_rgba(0,0,0,0.26)] transition-all duration-500 backdrop-blur-xl before:absolute before:inset-0 before:bg-[linear-gradient(135deg,rgba(255,255,255,0.3),transparent_38%,transparent_62%,rgba(255,255,255,0.12))] before:opacity-90 before:content-[''] after:absolute after:inset-y-0 after:-left-1/2 after:w-1/3 after:-skew-x-12 after:bg-white/35 after:blur-md after:opacity-0 after:transition-all after:duration-700 after:content-[''] hover:after:left-[130%] hover:after:opacity-100 active:shadow-[0_6px_18px_rgba(0,0,0,0.3)] sm:px-6 sm:py-3";
 
 const variants = {
   primary:
     "bg-[linear-gradient(135deg,rgba(255,196,126,0.98),rgba(255,162,78,0.94),rgba(255,214,161,0.92))] text-[#1a1209] shadow-[0_18px_42px_rgba(255,169,92,0.38)] hover:brightness-105",
-  glass:
-    "glass text-foreground hover:border-primary/40 hover:bg-white/8",
+  glass: "glass text-foreground hover:border-primary/40 hover:bg-white/8",
   accent:
     "bg-[linear-gradient(135deg,rgba(167,125,255,0.92),rgba(255,154,120,0.9))] text-white shadow-[0_18px_42px_rgba(128,93,255,0.34)] hover:brightness-110",
 } as const;
@@ -25,14 +25,19 @@ export function GlassButton({
   ...rest
 }: MotionButtonProps & { variant?: Variant }) {
   return (
-    <motion.button
-      whileHover={{ scale: 1.035 }}
-      whileTap={{ scale: 0.97 }}
-      className={`${base} ${variants[variant]} ${className}`}
-      {...rest}
+    <Magnetic
+      strength={10}
+      className={`inline-block max-w-full ${className.includes("w-full") ? "w-full" : ""}`}
     >
-      {children}
-    </motion.button>
+      <motion.button
+        whileHover={{ scale: 1.04 }}
+        whileTap={{ scale: 0.96 }}
+        className={`${base} ${variants[variant]} ${className}`}
+        {...rest}
+      >
+        {children}
+      </motion.button>
+    </Magnetic>
   );
 }
 
@@ -52,21 +57,19 @@ export function GlassLink({
   ariaLabel?: string;
 }) {
   return (
-    <motion.span
-      whileHover={{ scale: 1.035 }}
-      whileTap={{ scale: 0.97 }}
-      className="inline-block"
-    >
-      <Link
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        to={to as any}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        params={params as any}
-        aria-label={ariaLabel}
-        className={`${base} ${variants[variant]} ${className}`}
-      >
-        {children}
-      </Link>
-    </motion.span>
+    <Magnetic strength={10} className="inline-block">
+      <motion.span whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="inline-block">
+        <Link
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          to={to as any}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          params={params as any}
+          aria-label={ariaLabel}
+          className={`${base} ${variants[variant]} ${className}`}
+        >
+          {children}
+        </Link>
+      </motion.span>
+    </Magnetic>
   );
 }

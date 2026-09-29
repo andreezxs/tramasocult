@@ -57,7 +57,7 @@ function BookPage() {
           )}
         </Reveal>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-4 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {chapters.map((c, i) => (
             <Reveal key={c.id} delay={(i % 3) * 0.08}>
               <ChapterCard chapter={c} index={i} />

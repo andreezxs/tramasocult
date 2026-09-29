@@ -63,11 +63,11 @@ function AboutPage() {
           <div className="glass-panel grain relative mt-10 overflow-hidden p-8 sm:p-11">
             <p className="reading-body">
               <span className="text-primary">Tramas Ocultas: Vozes da Vida</span> não começou como
-              livro. 
+              livro.
             </p>
             <p className="reading-body mt-6">
-              O resultado são textos que atravessam sentimentos, perspectivas, histórias
-              que existem por baixo do visível.
+              O resultado são textos que atravessam sentimentos, perspectivas, histórias que existem
+              por baixo do visível.
             </p>
             <p className="reading-body mt-6">
               Esta versão web substitui o PDF tradicional. Em lugar de páginas estáticas, a obra
@@ -80,7 +80,7 @@ function AboutPage() {
         <div className="mt-10 grid gap-5 sm:grid-cols-2">
           {steps.map((s, i) => (
             <Reveal key={s.n} delay={i * 0.08}>
-              <div className="glass-panel h-full p-6">
+              <div className="glass-panel interactive-panel h-full p-6">
                 <span className="font-display text-3xl font-semibold text-primary/70">{s.n}</span>
                 <h2 className="mt-4 font-display text-lg font-semibold">{s.title}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.text}</p>

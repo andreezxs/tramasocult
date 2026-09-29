@@ -1,40 +1,50 @@
-import { Link } from "@tanstack/react-router";
-import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, Volume2, VolumeX, BookOpen, Lock } from "lucide-react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { motion, useMotionValueEvent, useScroll } from "motion/react";
+import { BookOpen, Feather, Home, Lock, Mail, Sparkles, Volume2, VolumeX } from "lucide-react";
 import { useState } from "react";
 import { useAmbientAudio } from "./AmbientAudioProvider";
 import { BOOK } from "@/lib/chapters";
+import { Magnetic } from "@/components/Motion";
 
 const links = [
-  { to: "/", label: "Início" },
-  { to: "/sobre", label: "Sobre o Projeto" },
-  { to: "/livro", label: "O Livro" },
-  { to: "/autor", label: "Autor" },
-  { to: "/contato", label: "Contato" },
+  { to: "/", label: "Início", icon: Home },
+  { to: "/sobre", label: "Sobre", icon: Sparkles },
+  { to: "/livro", label: "Livro", icon: BookOpen },
+  { to: "/autor", label: "Autor", icon: Feather },
+  { to: "/contato", label: "Contato", icon: Mail },
 ] as const;
+
+function isActivePath(pathname: string, to: string) {
+  if (to === "/") return pathname === "/";
+  return pathname === to || pathname.startsWith(`${to}/`);
+}
 
 function SoundControl({ compact = false }: { compact?: boolean }) {
   const { playing, volume, toggle, setVolume } = useAmbientAudio();
 
   const handleVolumeChange = (value: number) => {
     setVolume(value);
-    if (!playing && value > 0) {
-      toggle();
-    }
+    if (!playing && value > 0) toggle();
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div className={`group/sound flex items-center ${compact ? "gap-2" : "gap-1"}`}>
       <button
         type="button"
         onClick={toggle}
         aria-label={playing ? "Pausar trilha sonora" : "Ativar trilha sonora"}
         aria-pressed={playing}
-        className="glass grid h-9 w-9 place-items-center rounded-full text-foreground/85 transition-all duration-300 hover:scale-105 hover:text-primary"
+        className="nav-icon-btn"
       >
         {playing ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
       </button>
-      <label className={compact ? "flex items-center gap-2" : "hidden items-center gap-2 lg:flex"}>
+      <label
+        className={
+          compact
+            ? "flex items-center"
+            : "grid w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover/sound:w-[4.5rem] group-hover/sound:opacity-100 group-focus-within/sound:w-[4.5rem] group-focus-within/sound:opacity-100"
+        }
+      >
         <span className="sr-only">Volume da trilha sonora</span>
         <input
           type="range"
@@ -43,7 +53,7 @@ function SoundControl({ compact = false }: { compact?: boolean }) {
           step={0.02}
           value={volume}
           onChange={(e) => handleVolumeChange(Number(e.target.value))}
-          className="h-1 w-20 cursor-pointer appearance-none rounded-full bg-white/15 accent-primary"
+          className="h-1 w-full cursor-pointer appearance-none rounded-full bg-white/15 accent-primary"
         />
       </label>
     </div>
@@ -51,97 +61,121 @@ function SoundControl({ compact = false }: { compact?: boolean }) {
 }
 
 export function GlassNav() {
-  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { scrollY } = useScroll();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  useMotionValueEvent(scrollY, "change", (value) => {
+    setScrolled(value > 18);
+  });
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-2 pt-2.5 sm:px-6 sm:pt-5">
-      <motion.nav
-        initial={{ y: -28, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="glass-bar mx-auto flex max-w-5xl items-center justify-between rounded-[16px] border border-white/5 bg-white/[0.015] px-2.5 py-2 sm:px-4"
-      >
-        <Link to="/" className="group flex min-w-0 items-center gap-2.5" aria-label={BOOK.title}>
-          <span className="glass grid h-9 w-9 shrink-0 place-items-center rounded-xl text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-transform duration-500 group-hover:rotate-6">
-            <BookOpen className="h-4 w-4" />
-          </span>
-          <span className="flex min-w-0 flex-col leading-none">
-            <span className="truncate font-display text-[0.72rem] font-medium tracking-[-0.05em] text-foreground/95 sm:text-[0.82rem]">
-              Tramas Ocultas
-            </span>
-            <span className="hidden text-[0.54rem] uppercase tracking-[0.22em] text-muted-foreground sm:block">
-              Vozes da Vida
-            </span>
-          </span>
-        </Link>
+    <>
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-3 pt-[max(0.7rem,env(safe-area-inset-top))] sm:px-6 sm:pt-5">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
+          <Magnetic strength={7} className="pointer-events-auto">
+            <Link
+              to="/"
+              aria-label={BOOK.title}
+              className={`nav-mark group ${scrolled ? "nav-island-solid" : ""}`}
+            >
+              <span className="nav-mark-sigil" aria-hidden="true">
+                T
+              </span>
+              <span className="flex min-w-0 flex-col leading-none">
+                <span className="font-display text-[0.82rem] font-medium tracking-[-0.06em] text-foreground">
+                  Tramas
+                </span>
+                <span className="mt-0.5 text-[0.5rem] uppercase tracking-[0.28em] text-primary/80">
+                  Ocultas
+                </span>
+              </span>
+            </Link>
+          </Magnetic>
 
-        <ul className="hidden items-center gap-1 md:flex">
-          {links.map((l) => (
-            <li key={l.to}>
-              <Link
-                to={l.to}
-                activeOptions={{ exact: l.to === "/" }}
-                activeProps={{ className: "text-primary" }}
-                inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
-                className="relative rounded-full px-3 py-1.5 text-[0.8rem] font-medium transition-colors duration-300 hover:bg-white/5"
-              >
-                {l.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          <Link
-            to="/admin"
-            aria-label="Área do administrador"
-            title="Área do administrador"
-            className="glass grid h-9 w-9 place-items-center rounded-full text-foreground/85 transition-all duration-300 hover:scale-105 hover:text-primary"
+          <nav
+            aria-label="Principal"
+            className={`nav-island pointer-events-auto hidden px-1.5 py-1 md:flex ${
+              scrolled ? "nav-island-solid" : ""
+            }`}
           >
-            <Lock className="h-4 w-4" />
-          </Link>
-          <div className="hidden sm:block">
+            <ul className="flex items-center">
+              {links.map((link) => {
+                const active = isActivePath(pathname, link.to);
+                return (
+                  <li key={link.to} className="relative">
+                    <Link
+                      to={link.to}
+                      aria-current={active ? "page" : undefined}
+                      className={`relative z-10 inline-flex items-center rounded-full px-3.5 py-1.5 text-[0.78rem] font-medium transition-colors duration-300 ${
+                        active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {active && (
+                        <motion.span
+                          layoutId="nav-indicator"
+                          className="nav-indicator"
+                          transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                        />
+                      )}
+                      <span className="relative z-10">{link.label}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          <div
+            className={`nav-island pointer-events-auto flex items-center gap-1 px-1.5 py-1 ${
+              scrolled ? "nav-island-solid" : ""
+            }`}
+          >
+            <Link
+              to="/admin"
+              aria-label="Área do administrador"
+              title="Área do administrador"
+              className="nav-icon-btn"
+            >
+              <Lock className="h-3.5 w-3.5" />
+            </Link>
             <SoundControl />
           </div>
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-label={open ? "Fechar menu" : "Abrir menu"}
-            aria-expanded={open}
-            className="glass grid h-9 w-9 place-items-center rounded-full md:hidden"
-          >
-            {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-          </button>
         </div>
-      </motion.nav>
+      </header>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -12, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -12, scale: 0.98 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="glass-panel mx-auto mt-2 max-w-6xl p-3 md:hidden"
-          >
-            <ul className="flex flex-col">
-              {links.map((l) => (
-                <li key={l.to}>
-                  <Link
-                    to={l.to}
-                    onClick={() => setOpen(false)}
-                    activeOptions={{ exact: l.to === "/" }}
-                    activeProps={{ className: "text-primary" }}
-                    className="block rounded-2xl px-4 py-3 text-sm font-medium transition-colors hover:bg-white/5"
-                  >
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+      <nav
+        aria-label="Navegação móvel"
+        className="nav-dock pointer-events-none fixed inset-x-0 bottom-0 z-50 px-3 pb-[max(0.7rem,env(safe-area-inset-bottom))] md:hidden"
+      >
+        <ul className="nav-island nav-island-solid pointer-events-auto mx-auto flex max-w-md items-stretch justify-between px-1.5 py-1.5">
+          {links.map((link) => {
+            const active = isActivePath(pathname, link.to);
+            const Icon = link.icon;
+            return (
+              <li key={link.to} className="flex-1">
+                <Link
+                  to={link.to}
+                  aria-current={active ? "page" : undefined}
+                  className={`relative flex flex-col items-center gap-1 rounded-2xl px-1 py-1.5 text-[0.58rem] font-medium tracking-[0.04em] transition-colors ${
+                    active ? "text-primary" : "text-muted-foreground"
+                  }`}
+                >
+                  {active && (
+                    <motion.span
+                      layoutId="nav-dock-indicator"
+                      className="absolute inset-0 rounded-2xl bg-primary/12"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <Icon className="relative z-10 h-4 w-4" />
+                  <span className="relative z-10">{link.label}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </>
   );
 }

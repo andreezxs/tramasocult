@@ -67,8 +67,8 @@ function ContactPage() {
             Vamos conversar
           </h1>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
-            Impressões sobre a leitura, convites, parcerias ou apenas uma palavra nova para o próximo
-            capítulo toda mensagem é lida.
+            Impressões sobre a leitura, convites, parcerias ou apenas uma palavra nova para o
+            próximo capítulo toda mensagem é lida.
           </p>
         </Reveal>
 
@@ -79,7 +79,7 @@ function ContactPage() {
                 href={c.href}
                 target={c.href.startsWith("http") ? "_blank" : undefined}
                 rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="glass-panel group flex items-center gap-5 p-6 transition-transform duration-500 hover:-translate-y-1"
+                className="glass-panel interactive-panel group flex items-center gap-5 p-6 transition-transform duration-500 hover:-translate-y-1"
               >
                 <span className="glass grid h-11 w-11 shrink-0 place-items-center rounded-2xl text-primary">
                   <c.icon className="h-4.5 w-4.5" aria-hidden />
@@ -105,8 +105,13 @@ function ContactPage() {
                   <Smartphone className="h-5 w-5" aria-hidden />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-[0.64rem] uppercase tracking-[0.24em] text-primary">Apoie o projeto</p>
-                  <h2 id="doar" className="mt-2 max-w-md font-display text-2xl font-semibold leading-tight">
+                  <p className="text-[0.64rem] uppercase tracking-[0.24em] text-primary">
+                    Apoie o projeto
+                  </p>
+                  <h2
+                    id="doar"
+                    className="mt-2 max-w-md font-display text-2xl font-semibold leading-tight"
+                  >
                     Faça uma doação via Pix
                   </h2>
                   <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
@@ -117,11 +122,24 @@ function ContactPage() {
 
               <div className="w-full lg:w-72">
                 <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                  <span className="block text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground">Chave Pix</span>
-                  <code className="mt-2 block text-base font-semibold tracking-[0.08em] text-foreground">{pixKey}</code>
+                  <span className="block text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground">
+                    Chave Pix
+                  </span>
+                  <code className="mt-2 block text-base font-semibold tracking-[0.08em] text-foreground">
+                    {pixKey}
+                  </code>
                 </div>
-                <GlassButton type="button" variant="glass" onClick={copyPix} className="mt-3 w-full">
-                  {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
+                <GlassButton
+                  type="button"
+                  variant="glass"
+                  onClick={copyPix}
+                  className="mt-3 w-full"
+                >
+                  {copied ? (
+                    <Check className="h-4 w-4" aria-hidden />
+                  ) : (
+                    <Copy className="h-4 w-4" aria-hidden />
+                  )}
                   {copied ? "Pix copiado" : "Copiar chave Pix"}
                 </GlassButton>
                 <p className="mt-2 text-left text-[0.65rem] leading-relaxed text-muted-foreground">

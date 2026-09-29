@@ -19,7 +19,10 @@ export const Route = createFileRoute("/capitulos/$slug")({
   head: ({ params, loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [{ title: "Capítulo indisponível | Tramas Ocultas" }, { name: "robots", content: "noindex" }],
+        meta: [
+          { title: "Capítulo indisponível | Tramas Ocultas" },
+          { name: "robots", content: "noindex" },
+        ],
       };
     }
     const title = `${loaderData.title} | Tramas Ocultas: Vozes da Vida`;
@@ -83,7 +86,10 @@ function ChapterPage() {
       const blockedDevTools = commandKey && event.shiftKey && ["i", "j", "c"].includes(key);
       const blockedSystemCapture = event.key === "PrintScreen";
 
-      if (!isEditable(event.target) && (blockedCommand || blockedDevTools || blockedSystemCapture || event.key === "F12")) {
+      if (
+        !isEditable(event.target) &&
+        (blockedCommand || blockedDevTools || blockedSystemCapture || event.key === "F12")
+      ) {
         event.preventDefault();
         event.stopPropagation();
       }
@@ -188,15 +194,12 @@ function ChapterPage() {
           ))}
         </div>
 
-        <nav
-          aria-label="Navegação entre capítulos"
-          className="mt-16 grid gap-4 sm:grid-cols-2"
-        >
+        <nav aria-label="Navegação entre capítulos" className="mt-16 grid gap-4 sm:grid-cols-2">
           {previous ? (
             <Link
               to="/capitulos/$slug"
               params={{ slug: previous.slug }}
-              className="glass-panel group p-6 transition-transform duration-500 hover:-translate-y-1"
+              className="glass-panel interactive-panel group p-6 transition-transform duration-500 hover:-translate-y-1"
             >
               <span className="inline-flex items-center gap-2 text-[0.64rem] uppercase tracking-[0.24em] text-muted-foreground">
                 <ArrowLeft className="h-3 w-3" aria-hidden /> Anterior
@@ -213,7 +216,7 @@ function ChapterPage() {
             <Link
               to="/capitulos/$slug"
               params={{ slug: next.slug }}
-              className="glass-panel group p-6 text-right transition-transform duration-500 hover:-translate-y-1"
+              className="glass-panel interactive-panel group p-6 text-right transition-transform duration-500 hover:-translate-y-1"
             >
               <span className="inline-flex items-center gap-2 text-[0.64rem] uppercase tracking-[0.24em] text-muted-foreground">
                 Próximo <ArrowRight className="h-3 w-3" aria-hidden />
@@ -225,7 +228,7 @@ function ChapterPage() {
           ) : (
             <Link
               to="/livro"
-              className="glass-panel group p-6 text-right transition-transform duration-500 hover:-translate-y-1"
+              className="glass-panel interactive-panel group p-6 text-right transition-transform duration-500 hover:-translate-y-1"
             >
               <span className="text-[0.64rem] uppercase tracking-[0.24em] text-muted-foreground">
                 Fim da obra

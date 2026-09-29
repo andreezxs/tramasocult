@@ -1,9 +1,16 @@
-import { useEffect, useRef } from "react";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { useEffect, useRef, type PointerEvent as ReactPointerEvent } from "react";
 
 import cover from "@/assets/book-cover.svg";
 
 export function ImmersiveBookScene() {
   const coatingRef = useRef<HTMLCanvasElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
+  const springX = useSpring(rotateX, { stiffness: 90, damping: 16, mass: 0.45 });
+  const springY = useSpring(rotateY, { stiffness: 90, damping: 16, mass: 0.45 });
 
   useEffect(() => {
     const canvas = coatingRef.current;
@@ -41,7 +48,7 @@ export function ImmersiveBookScene() {
       const bounds = canvas.getBoundingClientRect();
       const x = event.clientX - bounds.left;
       const y = event.clientY - bounds.top;
-      const radius = 32 + Math.random() * 14;
+      const radius = 28 + Math.random() * 16;
 
       context.save();
       context.globalCompositeOperation = "destination-out";
@@ -62,11 +69,36 @@ export function ImmersiveBookScene() {
     };
   }, []);
 
+  const onMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (reduce || event.pointerType !== "mouse") return;
+    const rect = stageRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const px = (event.clientX - rect.left) / rect.width;
+    const py = (event.clientY - rect.top) / rect.height;
+    rotateY.set((px - 0.5) * 16);
+    rotateX.set((0.5 - py) * 10);
+  };
+
+  const onLeave = () => {
+    rotateX.set(0);
+    rotateY.set(0);
+  };
+
   return (
-    <div
+    <motion.div
+      ref={stageRef}
       className="scratch-book"
+      style={{
+        rotateX: springX,
+        rotateY: springY,
+        transformPerspective: 1400,
+        transformStyle: "preserve-3d",
+      }}
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
     >
       <div className="scratch-book-light" aria-hidden="true" />
+      <div className="scratch-book-orbit" aria-hidden="true" />
       <img
         className="scratch-book-cover"
         src={cover}
@@ -76,8 +108,8 @@ export function ImmersiveBookScene() {
       />
       <canvas ref={coatingRef} className="scratch-book-coating" aria-hidden="true" />
       <div className="scratch-book-instruction" aria-hidden="true">
-        <span /> Aproxime o olhar · passe o mouse para revelar
+        <span /> Toque ou passe o olhar para revelar
       </div>
-    </div>
+    </motion.div>
   );
 }

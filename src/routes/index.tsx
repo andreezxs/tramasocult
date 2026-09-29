@@ -2,10 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowRight, BookOpen, Feather, Sparkles, Clock } from "lucide-react";
-import { useRef, useState, type CSSProperties } from "react";
+import { useRef } from "react";
 
 import { chaptersQuery, BOOK } from "@/lib/chapters";
-import { Reveal, PageTransition } from "@/components/Motion";
+import { Reveal, PageTransition, Magnetic, SplitWords } from "@/components/Motion";
 import { GlassLink } from "@/components/GlassButton";
 import { ChapterCard } from "@/components/ChapterCard";
 import { ImmersiveBookScene } from "@/components/ImmersiveBookScene";
@@ -94,10 +94,12 @@ function Home() {
               initial={{ opacity: 0, y: 22, filter: "blur(12px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 1, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              className="title-gradient editorial-title mt-5 text-[2.8rem] font-medium leading-[0.82] sm:text-[4.7rem] lg:text-[6rem]"
+              className="title-gradient editorial-title mt-5 text-[clamp(2.4rem,8vw,6rem)] font-medium leading-[0.82]"
             >
-              Tramas
-              <span className="block text-foreground/88">Ocultas</span>
+              <SplitWords text="Tramas" delay={0.28} />
+              <span className="block text-foreground/88">
+                <SplitWords text="Ocultas" delay={0.42} />
+              </span>
             </motion.h1>
 
             <motion.h2
@@ -163,7 +165,8 @@ function Home() {
                 <span className="hero-3d-dot" aria-hidden="true" /> Edição digital · 2026
               </div>
               <div className="hero-3d-caption hero-3d-caption-bottom">
-                <BookOpen className="h-3.5 w-3.5" aria-hidden="true" /> {chapters.length} capítulos vivos
+                <BookOpen className="h-3.5 w-3.5" aria-hidden="true" /> {chapters.length} capítulos
+                vivos
               </div>
             </div>
           </motion.div>
@@ -196,20 +199,23 @@ function Home() {
                 </h2>
               </div>
             </div>
-            <div className="mt-8 grid gap-5 md:grid-cols-3">
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 md:grid-cols-3">
               {highlights.map((h, i) => (
                 <Reveal key={h.title} delay={i * 0.1}>
-                  <motion.div
-                    whileHover={{ y: -8 }}
-                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                    className="glass-panel h-full p-6"
-                  >
-                    <span className="glass grid h-11 w-11 place-items-center rounded-2xl text-primary">
-                      <h.icon className="h-4.5 w-4.5" aria-hidden />
-                    </span>
-                    <h3 className="mt-5 font-display text-lg font-semibold">{h.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{h.text}</p>
-                  </motion.div>
+                  <Magnetic strength={8} className="h-full">
+                    <motion.div
+                      whileHover={{ y: -8 }}
+                      whileTap={{ scale: 0.985 }}
+                      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                      className="glass-panel interactive-panel h-full p-6"
+                    >
+                      <span className="glass grid h-11 w-11 place-items-center rounded-2xl text-primary">
+                        <h.icon className="h-4.5 w-4.5" aria-hidden />
+                      </span>
+                      <h3 className="mt-5 font-display text-lg font-semibold">{h.title}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{h.text}</p>
+                    </motion.div>
+                  </Magnetic>
                 </Reveal>
               ))}
             </div>
@@ -225,10 +231,12 @@ function Home() {
               Palavras definidas, temas específicos, interpretações livres...
             </h2>
             <p className="reading-body mt-5 max-w-3xl">
-              Antes de cada capítulo existia apenas uma palavra no caminho algum tema para guiar o olhar. A tarefa era transformar esse ponto de partida mínimo em
-              narrativa: escutar o que o termo carregava, encontrar palavras escondidas nele e
-              escrever até que virasse história, reflexão ou memória real. Cada capítulo é resultado de um processo de escrita que mistura disciplina, intuição e
-              experimentação, e que se repete a cada novo texto publicado.
+              Antes de cada capítulo existia apenas uma palavra no caminho algum tema para guiar o
+              olhar. A tarefa era transformar esse ponto de partida mínimo em narrativa: escutar o
+              que o termo carregava, encontrar palavras escondidas nele e escrever até que virasse
+              história, reflexão ou memória real. Cada capítulo é resultado de um processo de
+              escrita que mistura disciplina, intuição e experimentação, e que se repete a cada novo
+              texto publicado.
             </p>
             <Link
               to="/sobre"

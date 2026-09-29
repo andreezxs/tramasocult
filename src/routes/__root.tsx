@@ -14,6 +14,7 @@ import { AmbientAudioProvider } from "@/components/AmbientAudioProvider";
 import { AmbientBackground } from "@/components/AmbientBackground";
 import { GlassNav } from "@/components/GlassNav";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { CursorAura } from "@/components/Motion";
 import { SiteFooter } from "@/components/SiteFooter";
 
 function NotFoundComponent() {
@@ -70,7 +71,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "author", content: "@designerandrecmg" },
       { property: "og:site_name", content: "Tramas Ocultas: Vozes da Vida" },
       { property: "og:type", content: "website" },
@@ -130,6 +131,7 @@ function RootComponent() {
       <AmbientAudioProvider>
         <LoadingScreen />
         <AmbientBackground />
+        <CursorAura />
         <GlassNav />
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
