@@ -1,10 +1,7 @@
-import { Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowUpRight, Clock } from "lucide-react";
-import type { Chapter } from "@/lib/chapters";
 import { TiltCard } from "@/components/Motion";
 
-export function ChapterCard({ chapter, index = 0 }: { chapter: Chapter; index?: number }) {
+export function ChapterCard() {
   const reduce = useReducedMotion();
 
   return (
@@ -16,42 +13,23 @@ export function ChapterCard({ chapter, index = 0 }: { chapter: Chapter; index?: 
         className="glass-panel edge-lit group relative flex h-full flex-col overflow-hidden p-4 sm:p-5"
       >
         <span className="card-sheen" aria-hidden />
-        <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-3 text-[0.58rem] uppercase tracking-[0.18em] text-muted-foreground sm:text-[0.62rem]">
-          <span>Capítulo {String(chapter.chapter_order).padStart(2, "0")}</span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2 py-1">
-            <Clock className="h-3 w-3" aria-hidden />
-            {chapter.reading_time} min
-          </span>
-        </div>
 
-        <h3 className="mt-4 font-display text-xl font-semibold tracking-[-0.05em] sm:text-[1.45rem]">
-          {chapter.title}
+        <h3 className="font-display text-xl font-semibold tracking-[-0.05em] sm:text-[1.45rem]">
+          Regras do conteúdo
         </h3>
 
-        {chapter.keyword && (
-          <p className="mt-2 text-[0.68rem] uppercase tracking-[0.16em] text-primary sm:text-[0.7rem]">
-            Palavra-base · {chapter.keyword}
-          </p>
-        )}
-
-        <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground sm:text-[0.96rem]">
-          {chapter.summary}
+        <p className="mt-3 text-sm leading-relaxed text-white/65">
+          Este espaço reúne conteúdos relacionados à obra Tramas Ocultas:
+          Vozes da Vida. As informações editoriais, descrições e
+          contextualizações apresentadas no site servem apenas como apoio e
+          não fazem parte do conteúdo original do livro.
         </p>
 
-        <div className="mt-6 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
-          <span className="text-[0.68rem] uppercase tracking-[0.18em] text-muted-foreground">
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          <Link
-            to="/capitulos/$slug"
-            params={{ slug: chapter.slug }}
-            className="inline-flex items-center gap-2 text-sm font-medium text-foreground transition-colors duration-300 group-hover:text-primary"
-            aria-label={`Ler o capítulo ${chapter.title}`}
-          >
-            Ler capítulo
-            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </Link>
-        </div>
+        <p className="mt-3 text-xs leading-relaxed text-white/45">
+          O conteúdo original da obra deve ser preservado integralmente,
+          sem alterações, adaptações ou interpretações apresentadas como
+          parte do texto original.
+        </p>
       </motion.article>
     </TiltCard>
   );
@@ -59,12 +37,8 @@ export function ChapterCard({ chapter, index = 0 }: { chapter: Chapter; index?: 
 
 export function ChapterSkeleton() {
   return (
-    <div className="glass-panel flex h-56 flex-col gap-4 p-6">
-      <div className="skeleton-shimmer h-3 w-24 rounded-full" />
+    <div className="glass-panel flex h-32 flex-col gap-4 p-6">
       <div className="skeleton-shimmer h-6 w-3/4 rounded-full" />
-      <div className="skeleton-shimmer h-3 w-full rounded-full" />
-      <div className="skeleton-shimmer h-3 w-5/6 rounded-full" />
-      <div className="skeleton-shimmer mt-auto h-3 w-28 rounded-full" />
     </div>
   );
 }
