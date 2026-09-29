@@ -1,5 +1,3 @@
-nesse
-
 import { Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
 import type { Chapter } from "@/lib/chapters";
