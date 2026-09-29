@@ -20,7 +20,7 @@ const FALLBACK_CHAPTERS: Chapter[] = [
   {
     id: "00000000-0000-0000-0000-000000000001",
     title: "Acesso ao livro",
-    slug: "o-fio-invisivel",
+    slug: "acesso-ao-livro",
     chapter_order: 1,
     content:
       "Quer acessar Tramas Ocultas: Vozes da Vida?\n\n" +
@@ -36,11 +36,11 @@ const FALLBACK_CHAPTERS: Chapter[] = [
   {
     id: "00000000-0000-0000-0000-000000000002",
     title: "Solicite seu acesso",
-    slug: "ruido-branco",
+    slug: "solicite-seu-acesso",
     chapter_order: 2,
     content:
       "O livro está disponível para leitura mediante acesso liberado.\n\n" +
-      "Chame na DM para receber as orientações." +
+      "Chame na DM para receber as orientações. " +
     summary:
       "O que resta quando desligamos o barulho que usamos para não nos ouvir.",
     keyword: "Silêncio",
