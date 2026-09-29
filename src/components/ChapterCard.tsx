@@ -1,3 +1,5 @@
+nesse
+
 import { Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
 import type { Chapter } from "@/lib/chapters";
@@ -17,19 +19,14 @@ export function ChapterCard({ chapter }: { chapter: Chapter; index?: number }) {
         <span className="card-sheen" aria-hidden />
 
         <h3 className="font-display text-xl font-semibold tracking-[-0.05em] sm:text-[1.45rem]">
-          Acesso ao livro
+          {chapter.title}
         </h3>
-
-        <p className="mt-3 text-sm leading-relaxed text-white/65">
-          O acesso ao livro é disponibilizado diretamente. Para receber o
-          conteúdo, basta chamar na DM e solicitar o acesso.
-        </p>
 
         <Link
           to="/capitulos/$slug"
           params={{ slug: chapter.slug }}
           className="absolute inset-0"
-          aria-label={`Solicitar acesso ao livro`}
+          aria-label={`Ler o capítulo ${chapter.title}`}
         />
       </motion.article>
     </TiltCard>
