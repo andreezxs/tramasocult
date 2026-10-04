@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { Magnetic } from "@/components/Motion";
 
 const base =
@@ -16,7 +16,7 @@ const variants = {
 
 type Variant = keyof typeof variants;
 
-type MotionButtonProps = React.ComponentProps<typeof motion.button>;
+type MotionButtonProps = ComponentProps<typeof motion.button>;
 
 export function GlassButton({
   children,

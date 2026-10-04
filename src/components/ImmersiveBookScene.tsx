@@ -18,38 +18,54 @@ export function ImmersiveBookScene() {
     const context = canvas.getContext("2d");
     if (!context) return;
 
-    const resize = () => {
-      const bounds = canvas.getBoundingClientRect();
-      const pixelRatio = Math.min(window.devicePixelRatio, 2);
-      canvas.width = bounds.width * pixelRatio;
-      canvas.height = bounds.height * pixelRatio;
-      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    let drawing = false;
+    let coatingDrawn = false;
+    let lastWidth = 0;
+    let lastHeight = 0;
 
-      const coating = context.createLinearGradient(0, 0, bounds.width, bounds.height);
+    const fillCoating = (width: number, height: number) => {
+      const coating = context.createLinearGradient(0, 0, width, height);
       coating.addColorStop(0, "#8b8881");
       coating.addColorStop(0.48, "#383a39");
       coating.addColorStop(1, "#68645d");
+      context.globalCompositeOperation = "source-over";
+      context.globalAlpha = 1;
       context.fillStyle = coating;
-      context.fillRect(0, 0, bounds.width, bounds.height);
+      context.fillRect(0, 0, width, height);
 
       context.globalAlpha = 0.18;
       context.strokeStyle = "#f7f3e8";
       context.lineWidth = 1;
-      for (let index = -bounds.height; index < bounds.width + bounds.height; index += 7) {
+      for (let index = -height; index < width + height; index += 7) {
         context.beginPath();
         context.moveTo(index, 0);
-        context.lineTo(index - bounds.height * 0.35, bounds.height);
+        context.lineTo(index - height * 0.35, height);
         context.stroke();
       }
       context.globalAlpha = 1;
+      coatingDrawn = true;
     };
 
-    const scratch = (event: PointerEvent) => {
+    const resize = () => {
       const bounds = canvas.getBoundingClientRect();
-      const x = event.clientX - bounds.left;
-      const y = event.clientY - bounds.top;
-      const radius = 28 + Math.random() * 16;
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      const nextWidth = Math.max(1, Math.floor(bounds.width * pixelRatio));
+      const nextHeight = Math.max(1, Math.floor(bounds.height * pixelRatio));
+      if (nextWidth === lastWidth && nextHeight === lastHeight) return;
 
+      lastWidth = nextWidth;
+      lastHeight = nextHeight;
+      canvas.width = nextWidth;
+      canvas.height = nextHeight;
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      fillCoating(bounds.width, bounds.height);
+    };
+
+    const scratchAt = (clientX: number, clientY: number) => {
+      const bounds = canvas.getBoundingClientRect();
+      const x = clientX - bounds.left;
+      const y = clientY - bounds.top;
+      const radius = 28 + Math.random() * 16;
       context.save();
       context.globalCompositeOperation = "destination-out";
       context.beginPath();
@@ -58,14 +74,44 @@ export function ImmersiveBookScene() {
       context.restore();
     };
 
+    const onPointerDown = (event: PointerEvent) => {
+      drawing = true;
+      canvas.setPointerCapture(event.pointerId);
+      scratchAt(event.clientX, event.clientY);
+    };
+    const onPointerMove = (event: PointerEvent) => {
+      if (!drawing && event.pointerType !== "mouse") return;
+      scratchAt(event.clientX, event.clientY);
+    };
+    const onPointerUp = (event: PointerEvent) => {
+      drawing = false;
+      if (canvas.hasPointerCapture(event.pointerId)) {
+        canvas.releasePointerCapture(event.pointerId);
+      }
+    };
+
     resize();
-    canvas.addEventListener("pointerdown", scratch);
-    canvas.addEventListener("pointermove", scratch);
+    if (!coatingDrawn) {
+      const bounds = canvas.getBoundingClientRect();
+      fillCoating(bounds.width, bounds.height);
+    }
+
+    canvas.addEventListener("pointerdown", onPointerDown);
+    canvas.addEventListener("pointermove", onPointerMove);
+    canvas.addEventListener("pointerup", onPointerUp);
+    canvas.addEventListener("pointercancel", onPointerUp);
+    canvas.addEventListener("pointerleave", onPointerUp);
     window.addEventListener("resize", resize);
+    const observer = new ResizeObserver(resize);
+    observer.observe(canvas);
     return () => {
-      canvas.removeEventListener("pointerdown", scratch);
-      canvas.removeEventListener("pointermove", scratch);
+      canvas.removeEventListener("pointerdown", onPointerDown);
+      canvas.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("pointerup", onPointerUp);
+      canvas.removeEventListener("pointercancel", onPointerUp);
+      canvas.removeEventListener("pointerleave", onPointerUp);
       window.removeEventListener("resize", resize);
+      observer.disconnect();
     };
   }, []);
 
@@ -97,6 +143,8 @@ export function ImmersiveBookScene() {
       onPointerMove={onMove}
       onPointerLeave={onLeave}
     >
+      <div className="portal-frame" aria-hidden="true" />
+      <div className="portal-depth" aria-hidden="true" />
       <div className="scratch-book-light" aria-hidden="true" />
       <div className="scratch-book-orbit" aria-hidden="true" />
       <img
@@ -105,10 +153,11 @@ export function ImmersiveBookScene() {
         alt="Capa do livro Tramas Ocultas: Vozes da Vida"
         width={1024}
         height={1536}
+        draggable={false}
       />
       <canvas ref={coatingRef} className="scratch-book-coating" aria-hidden="true" />
-      <div className="scratch-book-instruction" aria-hidden="true">
-        <span /> Toque ou passe o olhar para revelar
+      <div className="scratch-book-instruction">
+        <span /> Toque ou passe para revelar
       </div>
     </motion.div>
   );

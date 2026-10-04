@@ -5,10 +5,11 @@ import { ArrowRight, BookOpen, Feather, Sparkles, Clock } from "lucide-react";
 import { useRef } from "react";
 
 import { chaptersQuery, BOOK } from "@/lib/chapters";
-import { Reveal, PageTransition, Magnetic, SplitWords } from "@/components/Motion";
+import { Reveal, PageTransition, Magnetic } from "@/components/Motion";
 import { GlassLink } from "@/components/GlassButton";
 import { ChapterCard } from "@/components/ChapterCard";
 import { ImmersiveBookScene } from "@/components/ImmersiveBookScene";
+import { GpuBadge } from "@/components/GpuBadge";
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) => {
@@ -90,17 +91,24 @@ function Home() {
               Livro digital editorial
             </motion.p>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 22, filter: "blur(12px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 1, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              className="title-gradient editorial-title mt-5 text-[clamp(2.4rem,8vw,6rem)] font-medium leading-[0.82]"
-            >
-              <SplitWords text="Tramas" delay={0.28} />
-              <span className="block text-foreground/88">
-                <SplitWords text="Ocultas" delay={0.42} />
-              </span>
-            </motion.h1>
+            <h1 className="editorial-title mt-5 text-[clamp(2.4rem,8vw,6rem)] font-medium leading-[0.92]">
+              <motion.span
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                className="title-gradient block"
+              >
+                Tramas
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 0.36, ease: [0.22, 1, 0.36, 1] }}
+                className="mt-1 block text-foreground/88"
+              >
+                Ocultas
+              </motion.span>
+            </h1>
 
             <motion.h2
               initial={{ opacity: 0, y: 18 }}
@@ -162,7 +170,8 @@ function Home() {
             <div className="hero-3d-scene scratch-stage">
               <ImmersiveBookScene />
               <div className="hero-3d-caption hero-3d-caption-top">
-                <span className="hero-3d-dot" aria-hidden="true" /> Edição digital · 2026
+                <span className="hero-3d-dot" aria-hidden="true" />
+                <GpuBadge />
               </div>
               <div className="hero-3d-caption hero-3d-caption-bottom">
                 <BookOpen className="h-3.5 w-3.5" aria-hidden="true" /> {chapters.length} capítulos

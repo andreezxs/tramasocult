@@ -22,11 +22,8 @@ const FALLBACK_CHAPTERS: Chapter[] = [
     title: "Acesso ao livro",
     slug: "acesso-ao-livro",
     chapter_order: 1,
-    content:
-      "Quer acessar Tramas Ocultas: Vozes da Vida?\n\n" +
-      "Chame na DM e solicite o acesso." +
-    summary:
-      "Sobre os laços que sustentam pessoas mesmo quando ninguém está olhando.",
+    content: "Quer acessar Tramas Ocultas: Vozes da Vida?\n\n" + "Chame na DM e solicite o acesso.",
+    summary: "Sobre os laços que sustentam pessoas mesmo quando ninguém está olhando.",
     keyword: "Fio",
     theme: "Conexões humanas",
     cover_image: null,
@@ -40,9 +37,8 @@ const FALLBACK_CHAPTERS: Chapter[] = [
     chapter_order: 2,
     content:
       "O livro está disponível para leitura mediante acesso liberado.\n\n" +
-      "Chame na DM para receber as orientações. " +
-    summary:
-      "O que resta quando desligamos o barulho que usamos para não nos ouvir.",
+      "Chame na DM para receber as orientações.",
+    summary: "O que resta quando desligamos o barulho que usamos para não nos ouvir.",
     keyword: "Silêncio",
     theme: "Excesso e escuta",
     cover_image: null,
@@ -92,10 +88,7 @@ export function chapterNeighbors(chapters: Chapter[], slug: string) {
     index,
     chapter: index >= 0 ? chapters[index] : undefined,
     previous: index > 0 ? chapters[index - 1] : undefined,
-    next:
-      index >= 0 && index < chapters.length - 1
-        ? chapters[index + 1]
-        : undefined,
+    next: index >= 0 && index < chapters.length - 1 ? chapters[index + 1] : undefined,
   };
 }
 
