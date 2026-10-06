@@ -16,6 +16,7 @@ import { GlassNav } from "@/components/GlassNav";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { CursorAura } from "@/components/Motion";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ContentProtection } from "@/components/ContentProtection";
 
 function NotFoundComponent() {
   return (
@@ -98,7 +99,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           name: "Tramas Ocultas: Vozes da Vida",
           inLanguage: "pt-BR",
           bookFormat: "https://schema.org/EBook",
-          author: { "@type": "Person", name: "@designerandrecmg" },
+          url: "https://tramasocult.vercel.app",
+          author: {
+            "@type": "Person",
+            name: "@designerandrecmg",
+            url: "https://instagram.com/designerandrecmg",
+          },
         }),
       },
     ],
@@ -129,6 +135,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AmbientAudioProvider>
+        <ContentProtection />
         <LoadingScreen />
         <AmbientBackground />
         <CursorAura />

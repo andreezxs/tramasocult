@@ -95,5 +95,7 @@ export function chapterNeighbors(chapters: Chapter[], slug: string) {
 export const BOOK = {
   title: "Tramas Ocultas: Vozes da Vida",
   author: "@designerandrecmg",
-  subtitle: "Um livro digital sobre o que existe por baixo do visível.",
+  subtitle: "Uma palavra, um tema, escuta e escrita: histórias que existem por baixo do visível.",
+  siteUrl: "https://tramasocult.vercel.app",
+  instagramUrl: "https://instagram.com/designerandrecmg",
 } as const;

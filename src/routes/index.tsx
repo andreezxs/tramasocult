@@ -9,7 +9,6 @@ import { Reveal, PageTransition, Magnetic } from "@/components/Motion";
 import { GlassLink } from "@/components/GlassButton";
 import { ChapterCard } from "@/components/ChapterCard";
 import { ImmersiveBookScene } from "@/components/ImmersiveBookScene";
-import { GpuBadge } from "@/components/GpuBadge";
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) => {
@@ -17,16 +16,17 @@ export const Route = createFileRoute("/")({
   },
   head: () => ({
     meta: [
-      { title: "Tramas Ocultas: Vozes da Vida — eBook interativo" },
+      { title: "Tramas Ocultas: Vozes da Vida | @designerandrecmg" },
       {
         name: "description",
         content:
-          "Livro digital interativo de @designerandrecmg. Textos criados a partir de palavras e temas definidos, em uma experiência de leitura imersiva.",
+          "Tramas Ocultas: Vozes da Vida, de @designerandrecmg. Uma palavra, um tema, escuta e escrita: uma obra viva de leitura contemplativa.",
       },
       { property: "og:title", content: "Tramas Ocultas: Vozes da Vida" },
       {
         property: "og:description",
-        content: "Uma obra digital viva: leitura imersiva, design premium e trilha ambiente.",
+        content:
+          "Não nasceu como livro. Nasceu como exercício. Interface em vidro líquido, luz suave e trilha ambiente, sem competir com a leitura.",
       },
       { property: "og:url", content: "/" },
     ],
@@ -38,18 +38,18 @@ export const Route = createFileRoute("/")({
 const highlights = [
   {
     icon: Feather,
-    title: "Escrita a partir de palavras",
-    text: "Cada texto nasce de um termo e um tema definidos previamente, transformados em história, tensão e reflexão.",
+    title: "A palavra vem primeiro",
+    text: "Cada capítulo começa com um único termo e um tema. Nenhuma escrita antes da escuta: nunca uma explicação, sempre uma tentativa de ouvir até o fim.",
   },
   {
     icon: BookOpen,
-    title: "Leitura contínua",
-    text: "Capítulos organizados em fluxo, com navegação fluida, ritmo editorial e leitura em atmosfera íntima.",
+    title: "Obra viva",
+    text: "Capítulos independentes, publicados aos poucos. Uma coleção em expansão, não um produto fechado.",
   },
   {
     icon: Sparkles,
-    title: "Atmosfera imersiva",
-    text: "Interface em vidro líquido, luz suave e trilha ambiental que acompanham o tom contemplativo da obra.",
+    title: "Atmosfera contemplativa",
+    text: "Vidro líquido, iluminação suave e trilha sonora ambiente acompanham os textos sem nunca competir com a leitura.",
   },
 ];
 
@@ -79,7 +79,7 @@ function Home() {
               className="mb-5 flex items-center gap-3"
             >
               <span className="status-pill text-primary">@designerandrecmg</span>
-              <span className="status-pill">designer · escritor</span>
+              <span className="status-pill">vozes da vida</span>
             </motion.div>
 
             <motion.p
@@ -88,7 +88,7 @@ function Home() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="eyebrow"
             >
-              Livro digital editorial
+              Apresentação do projeto
             </motion.p>
 
             <h1 className="editorial-title mt-5 text-[clamp(2.4rem,8vw,6rem)] font-medium leading-[0.92]">
@@ -125,8 +125,8 @@ function Home() {
               transition={{ duration: 0.9, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
               className="mt-6 max-w-xl text-[0.96rem] leading-relaxed text-muted-foreground sm:text-lg"
             >
-              {BOOK.subtitle} Um livro pensado como experiência sensível: texto, imagem, memória e
-              silêncio em uma sequência contemplativa.
+              {BOOK.subtitle} Escrever é terapia pessoal: mistérios, sentimentos e conexões do dia a
+              dia, para que a leitura também encontre o seu próprio espaço.
             </motion.p>
 
             <motion.div
@@ -169,10 +169,6 @@ function Home() {
           >
             <div className="hero-3d-scene scratch-stage">
               <ImmersiveBookScene />
-              <div className="hero-3d-caption hero-3d-caption-top">
-                <span className="hero-3d-dot" aria-hidden="true" />
-                <GpuBadge />
-              </div>
               <div className="hero-3d-caption hero-3d-caption-bottom">
                 <BookOpen className="h-3.5 w-3.5" aria-hidden="true" /> {chapters.length} capítulos
                 vivos
@@ -184,15 +180,15 @@ function Home() {
 
       <section className="kinetic-band" aria-label="Manifesto da obra">
         <div className="kinetic-track" aria-hidden="true">
-          <span>PALAVRAS QUE RESPIRAM</span>
+          <span>A PALAVRA VEM PRIMEIRO</span>
           <span className="kinetic-mark">✦</span>
-          <span>VOZES QUE FICAM</span>
+          <span>VOZES DA VIDA</span>
           <span className="kinetic-mark">✦</span>
           <span>TRAMAS OCULTAS</span>
           <span className="kinetic-mark">✦</span>
-          <span>PALAVRAS QUE RESPIRAM</span>
+          <span>A PALAVRA VEM PRIMEIRO</span>
           <span className="kinetic-mark">✦</span>
-          <span>VOZES QUE FICAM</span>
+          <span>VOZES DA VIDA</span>
           <span className="kinetic-mark">✦</span>
         </div>
       </section>
@@ -204,7 +200,7 @@ function Home() {
               <div>
                 <p className="eyebrow text-accent">Destaques da obra</p>
                 <h2 id="destaques" className="mt-4 font-display text-2xl font-semibold sm:text-3xl">
-                  Uma publicação que mistura literatura, imagem e atmosfera.
+                  Escrita e design pensados juntos, como uma experiência só.
                 </h2>
               </div>
             </div>
@@ -235,17 +231,16 @@ function Home() {
       <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6" aria-labelledby="origem">
         <Reveal>
           <div className="glass-panel grain relative overflow-hidden p-8 sm:p-12">
-            <p className="eyebrow text-accent">Como os textos nasceram</p>
+            <p className="eyebrow text-accent">Sobre o projeto</p>
             <h2 id="origem" className="mt-4 font-display text-2xl font-semibold sm:text-3xl">
-              Palavras definidas, temas específicos, interpretações livres...
+              Não nasceu como livro. Nasceu como exercício.
             </h2>
             <p className="reading-body mt-5 max-w-3xl">
-              Antes de cada capítulo existia apenas uma palavra no caminho algum tema para guiar o
-              olhar. A tarefa era transformar esse ponto de partida mínimo em narrativa: escutar o
-              que o termo carregava, encontrar palavras escondidas nele e escrever até que virasse
-              história, reflexão ou memória real. Cada capítulo é resultado de um processo de
-              escrita que mistura disciplina, intuição e experimentação, e que se repete a cada novo
-              texto publicado.
+              A proposta é simples de descrever e difícil de cumprir: receber uma única palavra,
+              receber um tema que a acompanha, e escrever até que esse ponto de partida mínimo
+              revele algo que ainda não tinha sido dito. O resultado atravessa sentimentos, memórias
+              e perspectivas distintas: histórias que existem por baixo do visível, no mesmo lugar
+              onde vivem as coisas que sentimos mas raramente nomeamos.
             </p>
             <Link
               to="/sobre"

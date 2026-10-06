@@ -3,20 +3,11 @@ import type {} from "@tanstack/react-start";
 
 import { getPublishedChapters } from "@/db/chapters.functions";
 
-// Coloque aqui o domínio final quando ele estiver definido.
-// Exemplo: "https://tramasocultas.com.br"
-const BASE_URL = "";
+const BASE_URL = "https://tramasocult.vercel.app";
 
 interface SitemapEntry {
   path: string;
-  changefreq?:
-    | "always"
-    | "hourly"
-    | "daily"
-    | "weekly"
-    | "monthly"
-    | "yearly"
-    | "never";
+  changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
   priority?: string;
 }
 
@@ -74,12 +65,8 @@ export const Route = createFileRoute("/sitemap.xml")({
           [
             "  <url>",
             `    <loc>${BASE_URL}${entry.path}</loc>`,
-            entry.changefreq
-              ? `    <changefreq>${entry.changefreq}</changefreq>`
-              : null,
-            entry.priority
-              ? `    <priority>${entry.priority}</priority>`
-              : null,
+            entry.changefreq ? `    <changefreq>${entry.changefreq}</changefreq>` : null,
+            entry.priority ? `    <priority>${entry.priority}</priority>` : null,
             "  </url>",
           ]
             .filter(Boolean)

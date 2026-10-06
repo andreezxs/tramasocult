@@ -7,16 +7,17 @@ import { BOOK } from "@/lib/chapters";
 export const Route = createFileRoute("/autor")({
   head: () => ({
     meta: [
-      { title: "O Autor — @designerandrecmg | Tramas Ocultas" },
+      { title: "O Autor | @designerandrecmg | Tramas Ocultas" },
       {
         name: "description",
         content:
-          "Conheça @designerandrecmg, autor e designer por trás de Tramas Ocultas: Vozes da Vida.",
+          "Apresentação de @designerandrecmg, autor de Tramas Ocultas: Vozes da Vida. Escrever é terapia pessoal, escuta e jornada.",
       },
-      { property: "og:title", content: "O Autor — @designerandrecmg" },
+      { property: "og:title", content: "O Autor | @designerandrecmg" },
       {
         property: "og:description",
-        content: "Design, escrita e experiência digital em uma única obra.",
+        content:
+          "Mistérios, sentimentos e conexões do dia a dia: a voz por trás de Tramas Ocultas: Vozes da Vida.",
       },
       { property: "og:url", content: "/autor" },
     ],
@@ -43,15 +44,22 @@ function AuthorPage() {
             </span>
             <div>
               <p className="reading-body">
-                Designer e escritor, {BOOK.author} trabalha na fronteira entre imagem e palavra. Em
-                <span className="text-primary"> Tramas Ocultas: Vozes da Vida</span>, uniu os dois
-                ofícios: a escrita nasceu de palavras e temas definidos, e a apresentação nasceu do
-                desejo de que ler também fosse uma experiência visual.
+                Ei, bem-vindo(a)! Estes textos são onde compartilho os mistérios, sentimentos e
+                conexões que fazem parte do meu dia a dia. Aqui é um pedaço da minha jornada.
               </p>
               <p className="reading-body mt-6">
-                A obra reúne textos criados como exercício contínuo de criação cada capítulo é uma
-                tentativa de escutar o que existe por baixo de um conceito simples e devolvê-lo em
-                forma de história real com pensamento crítico.
+                Escrever é como minha “terapia pessoal”. É através das palavras que eu exploro
+                minhas emoções, enfrento desafios e comemoro minhas vitórias. Espero que, ao ler,
+                você também encontre um espaço para se conectar com suas próprias experiências e
+                sentimentos. Que minhas reflexões ressoem com você, trazendo conforto, clareza e
+                inspiração.
+              </p>
+              <p className="reading-body mt-6">
+                Em
+                <span className="text-primary"> Tramas Ocultas: Vozes da Vida</span>, escrita e
+                design se encontram no mesmo projeto: a palavra vem primeiro, a escuta vem depois, e
+                a interface existe para acompanhar o tom contemplativo dos textos, nunca para
+                competir com a leitura.
               </p>
               <a
                 href="https://instagram.com/designerandrecmg"

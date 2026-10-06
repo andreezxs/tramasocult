@@ -13,7 +13,7 @@ export const Route = createFileRoute("/contato")({
         content:
           "Fale com @designerandrecmg sobre a obra Tramas Ocultas: Vozes da Vida, parcerias, leituras e projetos.",
       },
-      { property: "og:title", content: "Contato — Tramas Ocultas" },
+      { property: "og:title", content: "Contato | Tramas Ocultas" },
       { property: "og:description", content: "Converse com o autor da obra." },
       { property: "og:url", content: "/contato" },
     ],
@@ -67,8 +67,8 @@ function ContactPage() {
             Vamos conversar
           </h1>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
-            Impressões sobre a leitura, convites, parcerias ou apenas uma palavra nova para o
-            próximo capítulo toda mensagem é lida.
+            Impressões sobre a leitura, convites, parcerias ou uma palavra nova para o próximo
+            capítulo. Toda mensagem é lida. Ig: @designerandrecmg.
           </p>
         </Reveal>
 

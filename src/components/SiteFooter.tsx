@@ -26,7 +26,9 @@ export function SiteFooter() {
 
         <div className="relative grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
           <div>
-            <p className="text-[0.58rem] uppercase tracking-[0.32em] text-primary">Obra digital</p>
+            <p className="text-[0.58rem] uppercase tracking-[0.32em] text-primary">
+              Apresentação do projeto
+            </p>
             <p className="mt-3 font-display text-[1.7rem] font-medium leading-[0.92] tracking-[-0.06em] sm:text-4xl">
               Tramas Ocultas
               <span className="mt-1 block text-[0.72em] text-foreground/55">Vozes da Vida</span>
@@ -74,7 +76,7 @@ export function SiteFooter() {
         </div>
 
         <div className="relative mt-8 flex flex-col gap-2 border-t border-white/8 pt-4 text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <span>Leitura digital contínua</span>
+          <span>Obra viva · em constante expansão</span>
           <span>{BOOK.author}</span>
         </div>
       </motion.div>

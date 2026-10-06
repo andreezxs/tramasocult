@@ -11,13 +11,13 @@ export const Route = createFileRoute("/livro")({
   },
   head: () => ({
     meta: [
-      { title: "O Livro — todos os capítulos | Tramas Ocultas" },
+      { title: "O Livro | todos os capítulos | Tramas Ocultas" },
       {
         name: "description",
         content:
-          "Todos os capítulos de Tramas Ocultas: Vozes da Vida em ordem, com resumo, palavra-base e tempo estimado de leitura.",
+          "Todos os capítulos de Tramas Ocultas: Vozes da Vida: vozes independentes de uma obra viva, em constante expansão.",
       },
-      { property: "og:title", content: "O Livro — Tramas Ocultas: Vozes da Vida" },
+      { property: "og:title", content: "O Livro | Tramas Ocultas: Vozes da Vida" },
       {
         property: "og:description",
         content: "A obra completa, capítulo por capítulo, em leitura digital contínua.",
@@ -45,8 +45,9 @@ function BookPage() {
             Capítulos em ordem
           </h1>
           <p className="mt-5 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground sm:text-base">
-            {chapters.length} capítulos, aproximadamente {total} minutos de leitura. Comece pelo
-            início ou escolha a voz que combina com o seu momento.
+            {chapters.length} capítulos independentes, aproximadamente {total} minutos de leitura.
+            Cada um é uma voz distinta. Comece pelo início ou escolha a que combina com o seu
+            momento.
           </p>
           {first && (
             <div className="mt-8">
