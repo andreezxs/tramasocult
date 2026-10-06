@@ -16,6 +16,7 @@ import { GlassNav } from "@/components/GlassNav";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { CursorAura } from "@/components/Motion";
 import { SiteFooter } from "@/components/SiteFooter";
+import { CookieNotice } from "@/components/CookieNotice";
 import { ContentProtection } from "@/components/ContentProtection";
 
 function NotFoundComponent() {
@@ -143,6 +144,7 @@ function RootComponent() {
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
         <SiteFooter />
+        <CookieNotice />
       </AmbientAudioProvider>
     </QueryClientProvider>
   );

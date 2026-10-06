@@ -75,9 +75,19 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="relative mt-8 flex flex-col gap-2 border-t border-white/8 pt-4 text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <span>Obra viva · em constante expansão</span>
-          <span>{BOOK.author}</span>
+        <div className="relative mt-8 flex flex-col gap-3 border-t border-white/8 pt-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground">
+            Obra viva · em constante expansão
+          </p>
+          <a
+            href="https://instagram.com/vyrecmg"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-follow"
+          >
+            <Instagram className="h-3.5 w-3.5" />
+            Siga @vyrecmg para saber mais
+          </a>
         </div>
       </motion.div>
     </footer>
