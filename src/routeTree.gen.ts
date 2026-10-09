@@ -17,6 +17,7 @@ import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as LivroRouteImport } from './routes/livro'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
 import { Route as CapitulosSlugRouteImport } from './routes/capitulos.$slug'
 
@@ -60,6 +61,11 @@ const SobreRoute = SobreRouteImport.update({
   path: '/sobre',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
   id: '/usuarios',
   path: '/usuarios',
@@ -82,11 +88,11 @@ export interface FileRoutesByFullPath {
   '/sobre': typeof SobreRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/capitulos/$slug': typeof CapitulosSlugRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acesso': typeof AcessoRoute
-  '/admin': typeof AdminRouteWithChildren
   '/autor': typeof AutorRoute
   '/contato': typeof ContatoRoute
   '/livro': typeof LivroRoute
@@ -94,6 +100,7 @@ export interface FileRoutesByTo {
   '/sobre': typeof SobreRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/capitulos/$slug': typeof CapitulosSlugRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -107,6 +114,7 @@ export interface FileRoutesById {
   '/sobre': typeof SobreRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/capitulos/$slug': typeof CapitulosSlugRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,11 +129,11 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/admin/usuarios'
     | '/capitulos/$slug'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/acesso'
-    | '/admin'
     | '/autor'
     | '/contato'
     | '/livro'
@@ -133,6 +141,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/admin/usuarios'
     | '/capitulos/$slug'
+    | '/admin'
   id:
     | '__root__'
     | '/'
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/admin/usuarios'
     | '/capitulos/$slug'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -217,6 +227,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SobreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/usuarios': {
       id: '/admin/usuarios'
       path: '/usuarios'
@@ -236,10 +253,12 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminUsuariosRoute: typeof AdminUsuariosRoute
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminUsuariosRoute: AdminUsuariosRoute,
+  AdminIndexRoute: AdminIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

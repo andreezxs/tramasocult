@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   createUser,
@@ -34,16 +34,24 @@ export function AdminUsersPanel() {
   const [draftChapterIds, setDraftChapterIds] = useState<string[]>([]);
   const [status, setStatus] = useState("");
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  async function loadUsers() {
-    const [nextUsers, nextChapters] = await Promise.all([getUsers(), getAssignableChapters()]);
-    setUsers(nextUsers as ManagedUser[]);
-    setChapters(nextChapters as AssignableChapter[]);
-  }
+  const loadUsers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [nextUsers, nextChapters] = await Promise.all([getUsers(), getAssignableChapters()]);
+      setUsers(nextUsers as ManagedUser[]);
+      setChapters(nextChapters as AssignableChapter[]);
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Não foi possível carregar os usuários.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     void loadUsers();
-  }, []);
+  }, [loadUsers]);
 
   function toggleChapter(chapterId: string, current: string[], setter: (ids: string[]) => void) {
     setter(
@@ -174,6 +182,7 @@ export function AdminUsersPanel() {
       </form>
 
       {status && <p className="mt-4 text-sm text-muted-foreground">{status}</p>}
+      {loading && <p className="mt-4 text-sm text-muted-foreground">Carregando usuários...</p>}
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
         <div className="space-y-3">
@@ -207,7 +216,7 @@ export function AdminUsersPanel() {
               </button>
             </div>
           ))}
-          {users.length === 0 && (
+          {!loading && users.length === 0 && (
             <p className="rounded-2xl border border-dashed border-white/10 p-6 text-sm text-muted-foreground">
               Nenhum usuário cadastrado.
             </p>
