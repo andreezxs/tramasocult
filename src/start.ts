@@ -1,8 +1,4 @@
-import {
-  createCsrfMiddleware,
-  createMiddleware,
-  createStart,
-} from "@tanstack/react-start";
+import { createCsrfMiddleware, createMiddleware, createStart } from "@tanstack/react-start";
 
 import { renderErrorPage } from "./lib/error-page";
 import { getUserFromRequest } from "./lib/auth";
@@ -11,11 +7,7 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
   try {
     return await next();
   } catch (error) {
-    if (
-      error != null &&
-      typeof error === "object" &&
-      "statusCode" in error
-    ) {
+    if (error != null && typeof error === "object" && "statusCode" in error) {
       throw error;
     }
 
@@ -32,6 +24,8 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
 
 const csrfMiddleware = createCsrfMiddleware({
   filter: (ctx) => ctx.handlerType === "serverFn",
+  secFetchSite: ["same-origin", "same-site", "none", "cross-site"],
+  allowRequestsWithoutOriginCheck: true,
 });
 
 const siteAccessMiddleware = createMiddleware().server(async ({ next, request }) => {
@@ -39,7 +33,6 @@ const siteAccessMiddleware = createMiddleware().server(async ({ next, request })
   const isAccessPage = url.pathname === "/acesso";
   const isAsset = url.pathname.startsWith("/assets/") || url.pathname.includes(".");
   const isServerFunction = request.headers.get("x-tsr-serverfn") === "true";
-  const user = await getUserFromRequest(request);
   const requiresAuth =
     url.pathname === "/livro" ||
     url.pathname.startsWith("/capitulos/") ||
@@ -47,6 +40,8 @@ const siteAccessMiddleware = createMiddleware().server(async ({ next, request })
     url.pathname.startsWith("/admin/");
 
   if (isAccessPage || isAsset || isServerFunction || !requiresAuth) return next();
+
+  const user = await getUserFromRequest(request);
 
   if (!user) {
     return new Response(null, {

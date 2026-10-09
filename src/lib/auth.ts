@@ -1,6 +1,6 @@
 import { createHash, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import { and, eq, gt, inArray, sql } from "drizzle-orm";
-import { getRequestHeader, setResponseHeader } from "@tanstack/react-start/server";
+import { deleteCookie, getCookie, getRequestHeader, setCookie } from "@tanstack/react-start/server";
 
 import { db } from "@/db/client";
 import { chapters, siteSessions, siteUsers, userChapterAccess } from "@/db/schema";
@@ -39,7 +39,19 @@ function hashToken(token: string) {
   return createHash("sha256").update(token).digest("hex");
 }
 
-function readSessionToken(cookieHeader = getRequestHeader("cookie")) {
+function isSecureRequest() {
+  const forwarded = getRequestHeader("x-forwarded-proto");
+  if (forwarded) return forwarded.split(",")[0]?.trim() === "https";
+  return process.env["NODE_ENV"] === "production";
+}
+
+function readSessionToken(cookieHeader?: string | undefined) {
+  try {
+    const fromApi = getCookie(SESSION_COOKIE);
+    if (fromApi) return fromApi;
+  } catch {
+    /* sem contexto de request */
+  }
   const cookie = cookieHeader
     ?.split(";")
     .map((part) => part.trim())
@@ -48,14 +60,16 @@ function readSessionToken(cookieHeader = getRequestHeader("cookie")) {
 }
 
 function setSessionCookie(token: string) {
-  const secure = process.env["NODE_ENV"] === "production" ? "; Secure" : "";
-  setResponseHeader(
-    "Set-Cookie",
-    `${SESSION_COOKIE}=${token}; Max-Age=${SESSION_MAX_AGE}; Path=/; HttpOnly; SameSite=Lax${secure}`,
-  );
+  setCookie(SESSION_COOKIE, token, {
+    httpOnly: true,
+    path: "/",
+    maxAge: SESSION_MAX_AGE,
+    sameSite: "lax",
+    secure: isSecureRequest(),
+  });
 }
 
-async function getUserFromCookie(cookieHeader: string | undefined): Promise<AuthUser | null> {
+async function getUserFromCookie(cookieHeader?: string | undefined): Promise<AuthUser | null> {
   const token = readSessionToken(cookieHeader);
   if (!token) return null;
 
@@ -87,8 +101,30 @@ async function ensureInitialAdmin(email: string, password: string) {
   const adminPassword = process.env["SITE_ADMIN_PASSWORD"];
   if (!adminEmail || !adminPassword || email !== adminEmail || password !== adminPassword) return;
 
-  const existingUser = await db.select({ id: siteUsers.id }).from(siteUsers).limit(1);
-  if (existingUser[0]) return;
+  const existingAdmin = await db
+    .select()
+    .from(siteUsers)
+    .where(eq(siteUsers.email, adminEmail))
+    .limit(1);
+  const admin = existingAdmin[0];
+
+  if (admin) {
+    const needsUpdate =
+      admin.role !== "admin" ||
+      !admin.isActive ||
+      !passwordMatches(adminPassword, admin.passwordHash);
+    if (needsUpdate) {
+      await db
+        .update(siteUsers)
+        .set({
+          passwordHash: passwordHash(adminPassword),
+          role: "admin",
+          isActive: true,
+        })
+        .where(eq(siteUsers.id, admin.id));
+    }
+    return;
+  }
 
   await db.insert(siteUsers).values({
     name: "Administrador",
@@ -136,7 +172,12 @@ export async function authenticateUser(email: string, password: string) {
 export async function logoutUser() {
   const token = readSessionToken();
   if (token) await db.delete(siteSessions).where(eq(siteSessions.tokenHash, hashToken(token)));
-  setResponseHeader("Set-Cookie", `${SESSION_COOKIE}=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax`);
+  deleteCookie(SESSION_COOKIE, {
+    path: "/",
+    httpOnly: true,
+    sameSite: "lax",
+    secure: isSecureRequest(),
+  });
 }
 
 export async function requireUser() {

@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { LockKeyhole, ArrowRight } from "lucide-react";
 import { useState } from "react";
 
@@ -16,7 +16,6 @@ export const Route = createFileRoute("/acesso")({
 });
 
 function AccessPage() {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -29,9 +28,14 @@ function AccessPage() {
 
     try {
       const user = await loginUser({ data: { email, password } });
-      await navigate({ to: user.role === "admin" ? "/admin" : "/livro" });
-    } catch {
-      setError("Código de acesso inválido.");
+      window.location.assign(user.role === "admin" ? "/admin" : "/livro");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "";
+      setError(
+        message.toLowerCase().includes("inválid")
+          ? "E-mail ou senha inválidos."
+          : "Não foi possível entrar. Tente novamente.",
+      );
     } finally {
       setLoading(false);
     }
@@ -44,7 +48,9 @@ function AccessPage() {
           <span className="glass grid h-12 w-12 place-items-center rounded-2xl text-primary">
             <LockKeyhole className="h-5 w-5" aria-hidden />
           </span>
-          <p className="mt-7 text-[0.64rem] uppercase tracking-[0.3em] text-primary">Acesso privado</p>
+          <p className="mt-7 text-[0.64rem] uppercase tracking-[0.3em] text-primary">
+            Acesso privado
+          </p>
           <h1 className="title-gradient mt-3 font-display text-4xl font-semibold leading-tight sm:text-5xl">
             Uma leitura para convidados.
           </h1>
