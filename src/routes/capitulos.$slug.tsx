@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Clock, Share2, Check } from "lucide-react";
 import { useState } from "react";
@@ -8,10 +8,12 @@ import { chaptersQuery, chapterNeighbors } from "@/lib/chapters";
 import { PageTransition, Reveal } from "@/components/Motion";
 import { ReadingProgress } from "@/components/ReadingProgress";
 import { GlassButton } from "@/components/GlassButton";
+import { firstNameOf, sessionQuery } from "@/lib/session";
 
 export const Route = createFileRoute("/capitulos/$slug")({
   loader: async ({ context, params }) => {
     const chapters = await context.queryClient.ensureQueryData(chaptersQuery());
+    void context.queryClient.ensureQueryData(sessionQuery());
     const found = chapters.find((c) => c.slug === params.slug);
     if (!found) throw notFound();
     return { title: found.title, summary: found.summary };
@@ -58,8 +60,10 @@ export const Route = createFileRoute("/capitulos/$slug")({
 function ChapterPage() {
   const { slug } = Route.useParams();
   const { data: chapters } = useSuspenseQuery(chaptersQuery());
+  const { data: user } = useQuery(sessionQuery());
   const { chapter, previous, next } = chapterNeighbors(chapters, slug);
   const [shared, setShared] = useState(false);
+  const readerName = firstNameOf(user?.name);
 
   if (!chapter) return null;
 
@@ -106,6 +110,12 @@ function ChapterPage() {
               <h1 className="title-gradient mt-5 font-display text-3xl font-semibold leading-tight sm:text-5xl">
                 {chapter.title}
               </h1>
+
+              {user?.name && (
+                <p className="mt-4 text-sm text-muted-foreground">
+                  {readerName}, esta voz foi escrita para a sua leitura.
+                </p>
+              )}
 
               {chapter.keyword && (
                 <p className="mt-4 text-sm text-muted-foreground">

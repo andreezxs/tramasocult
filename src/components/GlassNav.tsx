@@ -1,10 +1,23 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
-import { BookOpen, Feather, Home, Lock, Mail, Sparkles, Volume2, VolumeX } from "lucide-react";
+import {
+  BookOpen,
+  Feather,
+  Home,
+  Lock,
+  LogOut,
+  Mail,
+  Sparkles,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 import { useState } from "react";
 import { useAmbientAudio } from "./AmbientAudioProvider";
 import { BOOK } from "@/lib/chapters";
 import { Magnetic } from "@/components/Motion";
+import { logout } from "@/lib/auth.functions";
+import { firstNameOf, sessionQuery } from "@/lib/session";
 
 const links = [
   { to: "/", label: "Início", icon: Home },
@@ -64,6 +77,9 @@ export function GlassNav() {
   const [scrolled, setScrolled] = useState(false);
   const { scrollY } = useScroll();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const queryClient = useQueryClient();
+  const { data: user } = useQuery(sessionQuery());
+  const greetingName = firstNameOf(user?.name);
 
   useMotionValueEvent(scrollY, "change", (value) => {
     setScrolled(value > 18);
@@ -131,14 +147,54 @@ export function GlassNav() {
               scrolled ? "nav-island-solid" : ""
             }`}
           >
-            <Link
-              to="/admin"
-              aria-label="Área do administrador"
-              title="Área do administrador"
-              className="nav-icon-btn"
-            >
-              <Lock className="h-3.5 w-3.5" />
-            </Link>
+            {user ? (
+              <span className="hidden max-w-[8.5rem] truncate px-2 text-[0.72rem] font-medium text-primary sm:inline">
+                Olá, {greetingName}
+              </span>
+            ) : (
+              <Link
+                to="/acesso"
+                aria-label="Entrar na leitura"
+                title="Entrar na leitura"
+                className="hidden rounded-full px-2.5 py-1 text-[0.72rem] font-medium text-muted-foreground transition hover:text-foreground sm:inline"
+              >
+                Entrar
+              </Link>
+            )}
+            {user?.role === "admin" && (
+              <Link
+                to="/admin"
+                aria-label="Área do administrador"
+                title="Área do administrador"
+                className="nav-icon-btn"
+              >
+                <Lock className="h-3.5 w-3.5" />
+              </Link>
+            )}
+            {user ? (
+              <button
+                type="button"
+                aria-label="Sair da leitura"
+                title="Sair"
+                className="nav-icon-btn"
+                onClick={async () => {
+                  await logout();
+                  await queryClient.invalidateQueries({ queryKey: ["session-user"] });
+                  window.location.href = "/acesso";
+                }}
+              >
+                <LogOut className="h-3.5 w-3.5" />
+              </button>
+            ) : (
+              <Link
+                to="/acesso"
+                aria-label="Acesso privado"
+                title="Acesso privado"
+                className="nav-icon-btn sm:hidden"
+              >
+                <Lock className="h-3.5 w-3.5" />
+              </Link>
+            )}
             <SoundControl />
           </div>
         </div>

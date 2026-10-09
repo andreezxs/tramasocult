@@ -19,6 +19,8 @@ import { CursorAura } from "@/components/Motion";
 import { SiteFooter } from "@/components/SiteFooter";
 import { CookieNotice } from "@/components/CookieNotice";
 import { ContentProtection } from "@/components/ContentProtection";
+import { WelcomeOverlay } from "@/components/WelcomeOverlay";
+import { sessionQuery } from "@/lib/session";
 
 function NotFoundComponent() {
   return (
@@ -71,6 +73,9 @@ function ErrorComponent({ error, reset }: { error: unknown; reset: () => void })
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  loader: ({ context }) => {
+    void context.queryClient.ensureQueryData(sessionQuery());
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -141,6 +146,7 @@ function RootComponent() {
       <AmbientAudioProvider>
         <ContentProtection />
         <LoadingScreen />
+        <WelcomeOverlay />
         <AmbientBackground />
         <CursorAura />
         {!isAdmin && <GlassNav />}

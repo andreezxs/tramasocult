@@ -1,13 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { chaptersQuery } from "@/lib/chapters";
 import { PageTransition, Reveal } from "@/components/Motion";
 import { ChapterCard } from "@/components/ChapterCard";
 import { GlassLink } from "@/components/GlassButton";
+import { firstNameOf, sessionQuery, welcomeMessage } from "@/lib/session";
 
 export const Route = createFileRoute("/livro")({
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(chaptersQuery());
+    void context.queryClient.ensureQueryData(sessionQuery());
   },
   head: () => ({
     meta: [
@@ -31,8 +33,10 @@ export const Route = createFileRoute("/livro")({
 
 function BookPage() {
   const { data: chapters } = useSuspenseQuery(chaptersQuery());
+  const { data: user } = useQuery(sessionQuery());
   const total = chapters.reduce((acc, c) => acc + c.reading_time, 0);
   const first = chapters[0];
+  const name = firstNameOf(user?.name);
 
   return (
     <PageTransition>
@@ -42,12 +46,19 @@ function BookPage() {
             O Livro
           </p>
           <h1 className="title-gradient mt-4 font-display text-3xl font-semibold sm:text-5xl">
-            Capítulos em ordem
+            {user?.name ? `Olá, ${name}` : "Capítulos em ordem"}
           </h1>
+          {user?.name && (
+            <p className="mt-4 max-w-2xl font-display text-lg leading-snug text-foreground/82 sm:text-2xl">
+              {welcomeMessage(user.name)}
+            </p>
+          )}
           <p className="mt-5 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground sm:text-base">
             {chapters.length === 0
-              ? "Ainda não há textos liberados para a sua conta. Quando o administrador marcar capítulos para você, eles aparecem aqui."
-              : `${chapters.length} capítulos independentes, aproximadamente ${total} minutos de leitura. Cada um é uma voz distinta. Comece pelo início ou escolha a que combina com o seu momento.`}
+              ? `Ainda não há textos liberados para a sua conta, ${name}. Quando o administrador marcar capítulos para você, eles aparecem aqui.`
+              : user?.name
+                ? `${name}, aqui estão ${chapters.length} capítulos independentes, aproximadamente ${total} minutos de leitura. Cada um é uma voz distinta. Comece pelo início ou escolha a que combina com o seu momento.`
+                : `${chapters.length} capítulos independentes, aproximadamente ${total} minutos de leitura. Cada um é uma voz distinta. Comece pelo início ou escolha a que combina com o seu momento.`}
           </p>
           {first && (
             <div className="mt-8">

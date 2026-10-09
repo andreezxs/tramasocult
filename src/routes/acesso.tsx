@@ -28,7 +28,7 @@ function AccessPage() {
 
     try {
       const user = await loginUser({ data: { email, password } });
-      window.location.assign(user.role === "admin" ? "/admin" : "/livro");
+      window.location.assign(user.role === "admin" ? "/admin?welcome=1" : "/livro?welcome=1");
     } catch (error) {
       const message = error instanceof Error ? error.message : "";
       setError(
