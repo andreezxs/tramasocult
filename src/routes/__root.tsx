@@ -3,6 +3,7 @@ import {
   Outlet,
   Link,
   useRouter,
+  useRouterState,
   createRootRouteWithContext,
   HeadContent,
   Scripts,
@@ -132,6 +133,8 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const isAdmin = pathname.startsWith("/admin");
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -140,10 +143,10 @@ function RootComponent() {
         <LoadingScreen />
         <AmbientBackground />
         <CursorAura />
-        <GlassNav />
+        {!isAdmin && <GlassNav />}
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
-        <SiteFooter />
+        {!isAdmin && <SiteFooter />}
         <CookieNotice />
       </AmbientAudioProvider>
     </QueryClientProvider>

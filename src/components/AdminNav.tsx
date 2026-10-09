@@ -8,6 +8,7 @@ export function AdminNav() {
 
   return (
     <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <p className="text-[0.66rem] uppercase tracking-[0.3em] text-primary">Painel</p>
       <nav className="glass flex items-center gap-1 rounded-2xl p-1" aria-label="Administração">
         <Link
           to="/admin"

@@ -49,7 +49,7 @@ function AdminLayout() {
   if (checking) {
     return (
       <PageTransition>
-        <main className="mx-auto flex min-h-screen max-w-2xl items-center justify-center px-4 py-28 sm:px-6">
+        <main className="mx-auto flex min-h-screen max-w-2xl items-center justify-center px-4 py-16 sm:px-6">
           <p className="text-sm text-muted-foreground">Verificando acesso...</p>
         </main>
       </PageTransition>
@@ -59,7 +59,7 @@ function AdminLayout() {
   if (!authorized) {
     return (
       <PageTransition>
-        <main className="mx-auto flex min-h-screen max-w-2xl items-center px-4 py-28 sm:px-6">
+        <main className="mx-auto flex min-h-screen max-w-2xl items-center px-4 py-16 sm:px-6">
           <section className="glass-panel w-full rounded-3xl p-8 sm:p-10">
             <p className="text-[0.66rem] uppercase tracking-[0.3em] text-primary">Área privada</p>
             <h1 className="mt-4 font-display text-3xl font-semibold">Acesso de administrador</h1>
@@ -82,7 +82,7 @@ function AdminLayout() {
 
   return (
     <PageTransition>
-      <main className="mx-auto max-w-6xl px-4 py-28 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         <AdminNav />
         <Outlet />
       </main>
