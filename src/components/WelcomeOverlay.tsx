@@ -5,33 +5,47 @@ import { useEffect, useState } from "react";
 
 import { firstNameOf, sessionQuery } from "@/lib/session";
 
+type Phase = "show" | "zoom";
+
+function clearWelcomeParam() {
+  const url = new URL(window.location.href);
+  url.searchParams.delete("welcome");
+  window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+}
+
+function AppleMark() {
+  return (
+    <svg viewBox="0 0 16 20" className="h-3 w-3 fill-current" aria-hidden>
+      <path d="M13.3 10.6c0-2.1 1.7-3.1 1.8-3.2-1-1.5-2.5-1.7-3.1-1.7-1.3-.1-2.6.8-3.2.8s-1.7-.8-2.8-.7c-1.4 0-2.8.9-3.5 2.2-1.5 2.6-.4 6.5 1.1 8.6.7 1 1.6 2.2 2.7 2.1 1.1-.1 1.5-.7 2.8-.7s1.6.7 2.8.7c1.2 0 1.9-1 2.7-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.1-.8-2.1-3.6z" />
+      <path d="M11.1 4.3c.6-.7 1-1.7.9-2.7-1 .1-2.1.7-2.7 1.5-.6.7-1.1 1.7-.9 2.6 1 0 2-.6 2.7-1.4z" />
+    </svg>
+  );
+}
+
 export function WelcomeOverlay() {
   const search = useRouterState({ select: (state) => state.location.searchStr });
   const { data: user } = useQuery(sessionQuery());
   const [open, setOpen] = useState(false);
+  const [phase, setPhase] = useState<Phase>("show");
 
   useEffect(() => {
     const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
-    if (params.get("welcome") === "1" && user?.name) setOpen(true);
+    if (params.get("welcome") === "1" && user?.name) {
+      setPhase("show");
+      setOpen(true);
+    }
   }, [search, user?.name]);
 
   useEffect(() => {
-    if (!open) return;
-    const timer = window.setTimeout(() => {
-      setOpen(false);
-      const url = new URL(window.location.href);
-      url.searchParams.delete("welcome");
-      window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
-    }, 6200);
+    if (!open || phase !== "show") return;
+    const timer = window.setTimeout(() => setPhase("zoom"), 4200);
     return () => window.clearTimeout(timer);
-  }, [open]);
+  }, [open, phase]);
 
-  const dismiss = () => {
+  const close = () => {
     setOpen(false);
-    const url = new URL(window.location.href);
-    url.searchParams.delete("welcome");
-    const next = `${url.pathname}${url.search}${url.hash}`;
-    window.history.replaceState({}, "", next);
+    setPhase("show");
+    clearWelcomeParam();
   };
 
   const name = firstNameOf(user?.name);
@@ -40,51 +54,70 @@ export function WelcomeOverlay() {
     <AnimatePresence>
       {open && (
         <motion.button
-          key="welcome"
+          key="studio-welcome"
           type="button"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0, filter: "blur(18px)", scale: 1.03 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-0 z-[110] grid place-items-center bg-background/94 px-6 text-center"
-          onClick={dismiss}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
+          className="studio-stage"
+          onClick={() => (phase === "show" ? setPhase("zoom") : close())}
           aria-label={`Seja bem-vindo, ${name}`}
         >
-          <div className="absolute inset-0 ambient-light opacity-70" />
-          <div className="relative flex max-w-xl flex-col items-center gap-5">
-            <motion.span
-              initial={{ opacity: 0, letterSpacing: "0.7em" }}
-              animate={{ opacity: 1, letterSpacing: "0.28em" }}
-              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-              className="text-[0.62rem] uppercase text-muted-foreground"
-            >
-              Tramas Ocultas
-            </motion.span>
-            <motion.h1
-              initial={{ opacity: 0, y: 16, filter: "blur(12px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 1, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="title-gradient font-display text-3xl font-semibold sm:text-5xl"
-            >
-              Seja bem-vindo, {name}
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              className="max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base"
-            >
-              Está pronto para esta viagem em Tramas Ocultas?
-            </motion.p>
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.7 }}
-              className="mt-2 rounded-full border border-white/10 px-4 py-2 text-[0.68rem] uppercase tracking-[0.22em] text-primary"
-            >
-              Toque para continuar
-            </motion.span>
-          </div>
+          <div className="studio-room" />
+          <motion.div
+            className="studio-rig"
+            initial={{ opacity: 0, y: 48, scale: 0.88, rotateX: 12 }}
+            animate={
+              phase === "zoom"
+                ? { opacity: 1, y: 0, scale: 3.4, rotateX: 0 }
+                : { opacity: 1, y: 0, scale: 1, rotateX: 8 }
+            }
+            exit={{ opacity: 0, scale: 4.2, filter: "blur(18px)" }}
+            transition={{ duration: phase === "zoom" ? 1.45 : 1.15, ease: [0.32, 0.72, 0, 1] }}
+            onAnimationComplete={() => {
+              if (phase === "zoom") close();
+            }}
+          >
+            <div className="studio-display">
+              <div className="studio-chassis">
+                <div className="studio-screen">
+                  <div className="studio-glass" />
+                  <div className="studio-copy">
+                    <motion.p
+                      initial={{ opacity: 0, letterSpacing: "0.5em" }}
+                      animate={{ opacity: 1, letterSpacing: "0.28em" }}
+                      transition={{ duration: 1.1, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                      className="studio-kicker"
+                    >
+                      Tramas Ocultas
+                    </motion.p>
+                    <motion.h1
+                      initial={{ opacity: 0, y: 18, filter: "blur(12px)" }}
+                      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                      transition={{ duration: 1, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                      className="studio-title"
+                    >
+                      Seja bem-vindo, {name}
+                    </motion.h1>
+                    <motion.p
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.9, delay: 1.35, ease: [0.22, 1, 0.36, 1] }}
+                      className="studio-line"
+                    >
+                      Está pronto para esta viagem em Tramas Ocultas?
+                    </motion.p>
+                  </div>
+                </div>
+                <div className="studio-chin">
+                  <AppleMark />
+                </div>
+              </div>
+              <div className="studio-neck" />
+              <div className="studio-foot" />
+            </div>
+          </motion.div>
         </motion.button>
       )}
     </AnimatePresence>

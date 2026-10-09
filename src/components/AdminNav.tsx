@@ -1,23 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
 import { Link, useRouterState } from "@tanstack/react-router";
 
 import { logout } from "@/lib/auth.functions";
-import { firstNameOf, sessionQuery, welcomeMessage } from "@/lib/session";
 
 export function AdminNav() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const onUsers = pathname.startsWith("/admin/usuarios");
-  const { data: user } = useQuery(sessionQuery());
-  const name = firstNameOf(user?.name);
 
   return (
     <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-      <div>
-        <p className="text-[0.66rem] uppercase tracking-[0.3em] text-primary">Painel</p>
-        {user?.name && (
-          <p className="mt-2 max-w-sm text-sm text-muted-foreground">{welcomeMessage(user.name)}</p>
-        )}
-      </div>
+      <p className="text-[0.66rem] uppercase tracking-[0.3em] text-primary">Painel</p>
       <nav className="glass flex items-center gap-1 rounded-2xl p-1" aria-label="Administração">
         <Link
           to="/admin"
@@ -48,7 +39,7 @@ export function AdminNav() {
         }}
         className="rounded-xl border border-white/10 px-4 py-2 text-sm"
       >
-        Sair, {name}
+        Sair
       </button>
     </div>
   );

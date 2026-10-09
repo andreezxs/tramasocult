@@ -9,7 +9,7 @@ import { Reveal, PageTransition, Magnetic } from "@/components/Motion";
 import { GlassLink } from "@/components/GlassButton";
 import { ChapterCard } from "@/components/ChapterCard";
 import { ImmersiveBookScene } from "@/components/ImmersiveBookScene";
-import { firstNameOf, sessionQuery, welcomeMessage } from "@/lib/session";
+import { sessionQuery } from "@/lib/session";
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) => {
@@ -57,7 +57,6 @@ const highlights = [
 function Home() {
   const { data: chapters } = useSuspenseQuery(chaptersQuery());
   const { data: user } = useQuery(sessionQuery());
-  const readerName = firstNameOf(user?.name);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const coverY = useTransform(scrollYProgress, [0, 1], [0, 90]);
@@ -91,7 +90,7 @@ function Home() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="eyebrow"
             >
-              {user?.name ? `Bem-vindo, ${readerName}` : "Apresentação do projeto"}
+              Apresentação do projeto
             </motion.p>
 
             <h1 className="editorial-title mt-5 text-[clamp(2.4rem,8vw,6rem)] font-medium leading-[0.92]">
@@ -128,9 +127,8 @@ function Home() {
               transition={{ duration: 0.9, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
               className="mt-6 max-w-xl text-[0.96rem] leading-relaxed text-muted-foreground sm:text-lg"
             >
-              {user?.name
-                ? welcomeMessage(user.name)
-                : `${BOOK.subtitle} Escrever é terapia pessoal: mistérios, sentimentos e conexões do dia a dia, para que a leitura também encontre o seu próprio espaço.`}
+              {BOOK.subtitle} Escrever é terapia pessoal: mistérios, sentimentos e conexões do dia a
+              dia, para que a leitura também encontre o seu próprio espaço.
             </motion.p>
 
             <motion.div
@@ -145,7 +143,7 @@ function Home() {
                   params={{ slug: first.slug }}
                   ariaLabel={`Começar a leitura pelo capítulo ${first.title}`}
                 >
-                  {user?.name ? `Continuar, ${readerName}` : "Entrar na experiência"}
+                  {user?.name ? "Continuar a leitura" : "Entrar na experiência"}
                   <ArrowRight className="h-4 w-4" aria-hidden />
                 </GlassLink>
               )}

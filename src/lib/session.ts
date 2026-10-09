@@ -8,10 +8,6 @@ export function firstNameOf(name: string | null | undefined) {
   return first.charAt(0).toUpperCase() + first.slice(1);
 }
 
-export function welcomeMessage(name: string | null | undefined) {
-  return `Seja bem-vindo, ${firstNameOf(name)}. Está pronto para esta viagem em Tramas Ocultas?`;
-}
-
 export const sessionQuery = () =>
   queryOptions({
     queryKey: ["session-user"],
