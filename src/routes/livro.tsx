@@ -45,9 +45,9 @@ function BookPage() {
             Capítulos em ordem
           </h1>
           <p className="mt-5 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground sm:text-base">
-            {chapters.length} capítulos independentes, aproximadamente {total} minutos de leitura.
-            Cada um é uma voz distinta. Comece pelo início ou escolha a que combina com o seu
-            momento.
+            {chapters.length === 0
+              ? "Ainda não há textos liberados para a sua conta. Quando o administrador marcar capítulos para você, eles aparecem aqui."
+              : `${chapters.length} capítulos independentes, aproximadamente ${total} minutos de leitura. Cada um é uma voz distinta. Comece pelo início ou escolha a que combina com o seu momento.`}
           </p>
           {first && (
             <div className="mt-8">

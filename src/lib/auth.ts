@@ -1,9 +1,9 @@
 import { createHash, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
-import { and, eq, gt } from "drizzle-orm";
+import { and, eq, gt, inArray, sql } from "drizzle-orm";
 import { getRequestHeader, setResponseHeader } from "@tanstack/react-start/server";
 
 import { db } from "@/db/client";
-import { siteSessions, siteUsers } from "@/db/schema";
+import { chapters, siteSessions, siteUsers, userChapterAccess } from "@/db/schema";
 
 const SESSION_COOKIE = "tramas_session";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 30;
@@ -30,7 +30,9 @@ function passwordMatches(password: string, storedHash: string) {
   const actual = scryptSync(password, salt, 64).toString("hex");
   const actualBuffer = Buffer.from(actual);
   const expectedBuffer = Buffer.from(expected);
-  return actualBuffer.length === expectedBuffer.length && timingSafeEqual(actualBuffer, expectedBuffer);
+  return (
+    actualBuffer.length === expectedBuffer.length && timingSafeEqual(actualBuffer, expectedBuffer)
+  );
 }
 
 function hashToken(token: string) {
@@ -112,7 +114,11 @@ export function hasValidSession(request: Request) {
 export async function authenticateUser(email: string, password: string) {
   const normalizedEmail = normalizeEmail(email);
   await ensureInitialAdmin(normalizedEmail, password);
-  const result = await db.select().from(siteUsers).where(eq(siteUsers.email, normalizedEmail)).limit(1);
+  const result = await db
+    .select()
+    .from(siteUsers)
+    .where(eq(siteUsers.email, normalizedEmail))
+    .limit(1);
   const user = result[0];
 
   if (!user || !user.isActive || !passwordMatches(password, user.passwordHash)) return null;
@@ -141,7 +147,8 @@ export async function requireUser() {
 
 export async function requireAdmin() {
   const user = await requireUser();
-  if (user.role !== "admin") throw new Response("Acesso de administrador necessário", { status: 403 });
+  if (user.role !== "admin")
+    throw new Response("Acesso de administrador necessário", { status: 403 });
   return user;
 }
 
@@ -149,26 +156,155 @@ export async function createManagedUser(name: string, email: string, password: s
   await requireAdmin();
   const result = await db
     .insert(siteUsers)
-    .values({ name: name.trim(), email: normalizeEmail(email), passwordHash: passwordHash(password), role: "user" })
-    .returning({ id: siteUsers.id, name: siteUsers.name, email: siteUsers.email, role: siteUsers.role, isActive: siteUsers.isActive });
+    .values({
+      name: name.trim(),
+      email: normalizeEmail(email),
+      passwordHash: passwordHash(password),
+      role: "user",
+    })
+    .returning({
+      id: siteUsers.id,
+      name: siteUsers.name,
+      email: siteUsers.email,
+      role: siteUsers.role,
+      isActive: siteUsers.isActive,
+    });
   return result[0];
+}
+
+let accessTableReady: Promise<void> | null = null;
+
+async function ensureUserChapterAccessTable() {
+  if (!accessTableReady) {
+    accessTableReady = (async () => {
+      await db.execute(sql`
+        CREATE TABLE IF NOT EXISTS "user_chapter_access" (
+          "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+          "user_id" uuid NOT NULL REFERENCES "public"."site_users"("id") ON DELETE cascade,
+          "chapter_id" uuid NOT NULL REFERENCES "public"."chapters"("id") ON DELETE cascade,
+          "created_at" timestamp with time zone DEFAULT now() NOT NULL
+        )
+      `);
+      await db.execute(sql`
+        CREATE UNIQUE INDEX IF NOT EXISTS "user_chapter_access_unique"
+          ON "user_chapter_access" USING btree ("user_id","chapter_id")
+      `);
+    })();
+  }
+  await accessTableReady;
 }
 
 export async function listManagedUsers() {
   await requireAdmin();
-  return db
-    .select({ id: siteUsers.id, name: siteUsers.name, email: siteUsers.email, role: siteUsers.role, isActive: siteUsers.isActive })
+  await ensureUserChapterAccessTable();
+  const users = await db
+    .select({
+      id: siteUsers.id,
+      name: siteUsers.name,
+      email: siteUsers.email,
+      role: siteUsers.role,
+      isActive: siteUsers.isActive,
+    })
     .from(siteUsers)
     .orderBy(siteUsers.createdAt);
+
+  const accessRows = await db
+    .select({
+      userId: userChapterAccess.userId,
+      chapterId: userChapterAccess.chapterId,
+    })
+    .from(userChapterAccess);
+
+  const chaptersByUser = new Map<string, string[]>();
+  for (const row of accessRows) {
+    const current = chaptersByUser.get(row.userId) ?? [];
+    current.push(row.chapterId);
+    chaptersByUser.set(row.userId, current);
+  }
+
+  return users.map((user) => ({
+    ...user,
+    chapterIds: chaptersByUser.get(user.id) ?? [],
+  }));
 }
 
 export async function setManagedUserActive(id: string, isActive: boolean) {
   await requireAdmin();
-  return db.update(siteUsers).set({ isActive }).where(eq(siteUsers.id, id)).returning({ id: siteUsers.id, isActive: siteUsers.isActive });
+  return db
+    .update(siteUsers)
+    .set({ isActive })
+    .where(eq(siteUsers.id, id))
+    .returning({ id: siteUsers.id, isActive: siteUsers.isActive });
 }
 
 export async function requireReaderAccess() {
   const user = await getCurrentUser();
   if (user) return user;
   throw new Response("Acesso não autorizado", { status: 401 });
+}
+
+export async function listAssignableChapters() {
+  await requireAdmin();
+  return db
+    .select({
+      id: chapters.id,
+      title: chapters.title,
+      slug: chapters.slug,
+      chapterOrder: chapters.chapterOrder,
+      isPublished: chapters.isPublished,
+    })
+    .from(chapters)
+    .orderBy(chapters.chapterOrder);
+}
+
+export async function setManagedUserChapters(userId: string, chapterIds: string[]) {
+  await requireAdmin();
+  await ensureUserChapterAccessTable();
+
+  const user = await db
+    .select({ id: siteUsers.id, role: siteUsers.role })
+    .from(siteUsers)
+    .where(eq(siteUsers.id, userId))
+    .limit(1);
+
+  if (!user[0]) throw new Error("Usuário não encontrado");
+
+  const uniqueChapterIds = Array.from(new Set(chapterIds.filter(Boolean)));
+  const validChapterIds =
+    uniqueChapterIds.length === 0
+      ? []
+      : (
+          await db
+            .select({ id: chapters.id })
+            .from(chapters)
+            .where(inArray(chapters.id, uniqueChapterIds))
+        ).map((chapter) => chapter.id);
+
+  await db.delete(userChapterAccess).where(eq(userChapterAccess.userId, userId));
+
+  if (validChapterIds.length === 0) {
+    return { id: userId, chapterIds: [] as string[] };
+  }
+
+  await db.insert(userChapterAccess).values(
+    validChapterIds.map((chapterId) => ({
+      userId,
+      chapterId,
+    })),
+  );
+
+  return { id: userId, chapterIds: validChapterIds };
+}
+
+export async function getReadableChapterIds(userId: string, role: string) {
+  if (role === "admin") return null;
+
+  await ensureUserChapterAccessTable();
+
+  const rows = await db
+    .select({ chapterId: userChapterAccess.chapterId })
+    .from(userChapterAccess)
+    .where(eq(userChapterAccess.userId, userId));
+
+  return rows.map((row) => row.chapterId);
 }

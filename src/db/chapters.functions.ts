@@ -1,18 +1,29 @@
 import { createServerFn } from "@tanstack/react-start";
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq, inArray } from "drizzle-orm";
 
 import { db } from "./client";
 import { chapters } from "./schema";
-import { requireAdmin, requireReaderAccess } from "@/lib/auth";
+import { getReadableChapterIds, requireAdmin, requireReaderAccess } from "@/lib/auth";
 
 export const getPublishedChapters = createServerFn({
   method: "GET",
 }).handler(async () => {
-  await requireReaderAccess();
+  const user = await requireReaderAccess();
+  const allowedIds = await getReadableChapterIds(user.id, user.role);
+
+  if (allowedIds && allowedIds.length === 0) {
+    return [];
+  }
+
+  const filters = [eq(chapters.isPublished, true)];
+  if (allowedIds) {
+    filters.push(inArray(chapters.id, allowedIds));
+  }
+
   return await db
     .select()
     .from(chapters)
-    .where(eq(chapters.isPublished, true))
+    .where(and(...filters))
     .orderBy(asc(chapters.chapterOrder));
 });
 
@@ -20,10 +31,7 @@ export const getChapters = createServerFn({
   method: "GET",
 }).handler(async () => {
   await requireAdmin();
-  return await db
-    .select()
-    .from(chapters)
-    .orderBy(asc(chapters.chapterOrder));
+  return await db.select().from(chapters).orderBy(asc(chapters.chapterOrder));
 });
 
 export const saveChapter = createServerFn({
@@ -54,10 +62,7 @@ export const saveChapter = createServerFn({
       return result[0];
     }
 
-    const result = await db
-      .insert(chapters)
-      .values(data)
-      .returning();
+    const result = await db.insert(chapters).values(data).returning();
 
     return result[0];
   });

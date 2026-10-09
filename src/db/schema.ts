@@ -1,12 +1,4 @@
-import {
-  boolean,
-  integer,
-  pgTable,
-  uniqueIndex,
-  text,
-  timestamp,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, uniqueIndex, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const chapters = pgTable("chapters", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -65,5 +57,22 @@ export const siteSessions = pgTable(
   },
   (table) => ({
     tokenUnique: uniqueIndex("site_sessions_token_unique").on(table.tokenHash),
+  }),
+);
+
+export const userChapterAccess = pgTable(
+  "user_chapter_access",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => siteUsers.id, { onDelete: "cascade" }),
+    chapterId: uuid("chapter_id")
+      .notNull()
+      .references(() => chapters.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => ({
+    userChapterUnique: uniqueIndex("user_chapter_access_unique").on(table.userId, table.chapterId),
   }),
 );

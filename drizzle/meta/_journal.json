@@ -15,6 +15,13 @@
       "when": 1789399134115,
       "tag": "0001_site_access_users",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789480000000,
+      "tag": "0002_user_chapter_access",
+      "breakpoints": true
     }
   ]
 }
