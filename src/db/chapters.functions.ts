@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { and, asc, eq, inArray } from "drizzle-orm";
+import { asc, eq, inArray } from "drizzle-orm";
 
 import { db } from "./client";
 import { chapters } from "./schema";
@@ -15,15 +15,18 @@ export const getPublishedChapters = createServerFn({
     return [];
   }
 
-  const filters = [eq(chapters.isPublished, true)];
   if (allowedIds) {
-    filters.push(inArray(chapters.id, allowedIds));
+    return await db
+      .select()
+      .from(chapters)
+      .where(inArray(chapters.id, allowedIds))
+      .orderBy(asc(chapters.chapterOrder));
   }
 
   return await db
     .select()
     .from(chapters)
-    .where(and(...filters))
+    .where(eq(chapters.isPublished, true))
     .orderBy(asc(chapters.chapterOrder));
 });
 

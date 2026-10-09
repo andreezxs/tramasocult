@@ -1,5 +1,5 @@
 import { createHash, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
-import { and, eq, gt, inArray, sql } from "drizzle-orm";
+import { and, eq, gt, sql } from "drizzle-orm";
 import { deleteCookie, getCookie, getRequestHeader, setCookie } from "@tanstack/react-start/server";
 
 import { db } from "@/db/client";
@@ -311,30 +311,21 @@ export async function setManagedUserChapters(userId: string, chapterIds: string[
   if (!user[0]) throw new Error("Usuário não encontrado");
 
   const uniqueChapterIds = Array.from(new Set(chapterIds.filter(Boolean)));
-  const validChapterIds =
-    uniqueChapterIds.length === 0
-      ? []
-      : (
-          await db
-            .select({ id: chapters.id })
-            .from(chapters)
-            .where(inArray(chapters.id, uniqueChapterIds))
-        ).map((chapter) => chapter.id);
 
   await db.delete(userChapterAccess).where(eq(userChapterAccess.userId, userId));
 
-  if (validChapterIds.length === 0) {
+  if (uniqueChapterIds.length === 0) {
     return { id: userId, chapterIds: [] as string[] };
   }
 
   await db.insert(userChapterAccess).values(
-    validChapterIds.map((chapterId) => ({
+    uniqueChapterIds.map((chapterId) => ({
       userId,
       chapterId,
     })),
   );
 
-  return { id: userId, chapterIds: validChapterIds };
+  return { id: userId, chapterIds: uniqueChapterIds };
 }
 
 export async function getReadableChapterIds(userId: string, role: string) {

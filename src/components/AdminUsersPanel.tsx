@@ -89,12 +89,20 @@ export function AdminUsersPanel() {
     setStatus("");
   }
 
+  function selectAllChapters() {
+    setDraftChapterIds(chapters.map((chapter) => chapter.id));
+  }
+
   async function handleSaveTexts() {
     if (!selectedUserId) return;
     setSaving(true);
     try {
-      await updateUserChapters({ data: { id: selectedUserId, chapterIds: draftChapterIds } });
-      setStatus("Textos deste usuário atualizados.");
+      const result = await updateUserChapters({
+        data: { id: selectedUserId, chapterIds: draftChapterIds },
+      });
+      const savedIds = result.chapterIds ?? draftChapterIds;
+      setDraftChapterIds(savedIds);
+      setStatus(`${savedIds.length} textos liberados para este usuário.`);
       await loadUsers();
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Não foi possível atualizar os textos.");
@@ -203,7 +211,7 @@ export function AdminUsersPanel() {
                 <p className="mt-1 text-xs text-muted-foreground">
                   {user.role === "admin"
                     ? "Acesso a todos os textos"
-                    : `${user.chapterIds.length} texto${user.chapterIds.length === 1 ? "" : "s"} liberado${user.chapterIds.length === 1 ? "" : "s"}`}
+                    : `${selectedUserId === user.id ? draftChapterIds.length : user.chapterIds.length} textos liberados`}
                 </p>
               </button>
               <button
@@ -240,8 +248,24 @@ export function AdminUsersPanel() {
             <>
               <h2 className="font-display text-xl font-semibold">{selectedUser.name}</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Marque os textos que esta pessoa pode ler.
+                {draftChapterIds.length} de {chapters.length} textos marcados.
               </p>
+              <div className="mt-3 flex gap-2">
+                <button
+                  type="button"
+                  onClick={selectAllChapters}
+                  className="rounded-xl border border-white/10 px-3 py-1.5 text-xs"
+                >
+                  Marcar todos
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDraftChapterIds([])}
+                  className="rounded-xl border border-white/10 px-3 py-1.5 text-xs"
+                >
+                  Limpar
+                </button>
+              </div>
               <div className="mt-4 space-y-2">
                 {chapters.map((chapter) => (
                   <label
