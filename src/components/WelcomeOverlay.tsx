@@ -6,8 +6,6 @@ import { useEffect, useState } from "react";
 import { detectDevice, deviceZoom, type DetectedDevice } from "@/lib/device";
 import { firstNameOf, sessionQuery } from "@/lib/session";
 
-type Phase = "show" | "zoom";
-
 function clearWelcomeParam() {
   const url = new URL(window.location.href);
   url.searchParams.delete("welcome");
@@ -26,30 +24,9 @@ function AppleMark({ className = "h-3 w-3" }: { className?: string }) {
 function WelcomeCopy({ name }: { name: string }) {
   return (
     <div className="studio-copy">
-      <motion.p
-        initial={{ opacity: 0, letterSpacing: "0.5em" }}
-        animate={{ opacity: 1, letterSpacing: "0.28em" }}
-        transition={{ duration: 1.1, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        className="studio-kicker"
-      >
-        Tramas Ocultas
-      </motion.p>
-      <motion.h1
-        initial={{ opacity: 0, y: 18, filter: "blur(12px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 1, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
-        className="studio-title"
-      >
-        Seja bem-vindo, {name}
-      </motion.h1>
-      <motion.p
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, delay: 1.35, ease: [0.22, 1, 0.36, 1] }}
-        className="studio-line"
-      >
-        Está pronto para esta viagem em Tramas Ocultas?
-      </motion.p>
+      <p className="studio-kicker">Tramas Ocultas</p>
+      <h1 className="studio-title">Seja bem-vindo, {name}</h1>
+      <p className="studio-line">Está pronto para esta viagem em Tramas Ocultas?</p>
     </div>
   );
 }
@@ -132,7 +109,6 @@ export function WelcomeOverlay() {
   const search = useRouterState({ select: (state) => state.location.searchStr });
   const { data: user } = useQuery(sessionQuery());
   const [open, setOpen] = useState(false);
-  const [phase, setPhase] = useState<Phase>("show");
   const [device, setDevice] = useState<DetectedDevice>({ kind: "monitor", label: "Monitor" });
 
   useEffect(() => {
@@ -143,20 +119,12 @@ export function WelcomeOverlay() {
     const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
     if (params.get("welcome") === "1" && user?.name) {
       setDevice(detectDevice());
-      setPhase("show");
       setOpen(true);
     }
   }, [search, user?.name]);
 
-  useEffect(() => {
-    if (!open || phase !== "show") return;
-    const timer = window.setTimeout(() => setPhase("zoom"), 4200);
-    return () => window.clearTimeout(timer);
-  }, [open, phase]);
-
   const close = () => {
     setOpen(false);
-    setPhase("show");
     clearWelcomeParam();
   };
 
@@ -166,36 +134,29 @@ export function WelcomeOverlay() {
   return (
     <AnimatePresence>
       {open && (
-        <motion.button
+        <motion.div
           key="studio-welcome"
-          type="button"
-          initial={{ opacity: 0 }}
+          role="presentation"
+          initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
+          transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
           className="studio-stage"
-          onClick={() => (phase === "show" ? setPhase("zoom") : close())}
-          aria-label={`Seja bem-vindo, ${name}`}
+          onClick={close}
         >
           <div className="studio-room" />
           <motion.div
             className="studio-rig"
-            initial={{ opacity: 0, y: 48, scale: 0.88, rotateX: 12 }}
-            animate={
-              phase === "zoom"
-                ? { opacity: 1, y: 0, scale: zoom, rotateX: 0 }
-                : { opacity: 1, y: 0, scale: 1, rotateX: 8 }
-            }
-            exit={{ opacity: 0, scale: zoom + 0.6, filter: "blur(18px)" }}
-            transition={{ duration: phase === "zoom" ? 1.45 : 1.15, ease: [0.32, 0.72, 0, 1] }}
-            onAnimationComplete={() => {
-              if (phase === "zoom") close();
-            }}
+            initial={{ opacity: 1, y: 24, scale: 0.92 }}
+            animate={{ opacity: 1, y: 0, scale: zoom }}
+            exit={{ opacity: 0, scale: zoom }}
+            transition={{ duration: 0.72, ease: [0.32, 0.72, 0, 1] }}
+            onAnimationComplete={close}
           >
             <DeviceFrame device={device} name={name} />
             <p className="device-caption">{device.label}</p>
           </motion.div>
-        </motion.button>
+        </motion.div>
       )}
     </AnimatePresence>
   );
