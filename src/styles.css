@@ -1365,361 +1365,274 @@
   }
 }
 
-.studio-stage {
+.passport-stage {
   position: fixed;
   inset: 0;
   z-index: 110;
   display: grid;
   place-items: center;
   overflow: hidden;
-  border: 0;
-  background: #050506;
   cursor: pointer;
-  perspective: 1600px;
+  perspective: 1800px;
 }
 
-.studio-room {
+.passport-room {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(48% 36% at 50% 18%, rgb(255 255 255 / 8%) 0%, transparent 70%),
+    radial-gradient(42% 32% at 50% 18%, rgb(171 224 84 / 10%) 0%, transparent 70%),
     radial-gradient(70% 55% at 50% 100%, rgb(0 0 0 / 88%) 0%, transparent 72%),
     #050506;
 }
 
-.studio-rig {
+.passport-scene {
   position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 1.2rem;
+}
+
+.passport-book {
+  position: relative;
+  width: min(92vw, 22.5rem);
+  aspect-ratio: 3 / 4.15;
   transform-style: preserve-3d;
+  perspective: 1600px;
+  filter: drop-shadow(0 36px 48px rgb(0 0 0 / 62%));
+  transition: transform 1.15s var(--apple);
 }
 
-.studio-display {
-  width: min(92vw, 52rem);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  filter: drop-shadow(0 42px 70px rgb(0 0 0 / 72%));
-}
-
-.studio-chassis {
-  width: 100%;
-  border-radius: 22px 22px 26px 26px;
-  padding: 9px 9px 0;
-  background:
-    linear-gradient(180deg, #6d6d72 0%, #3a3a3e 18%, #232326 58%, #1a1a1c 100%);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 28%),
-    inset 0 -1px 0 rgb(0 0 0 / 55%),
-    0 18px 40px rgb(0 0 0 / 38%);
-}
-
-.studio-screen {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 16 / 10.15;
-  border-radius: 12px;
-  background:
-    radial-gradient(70% 80% at 50% 42%, #1b1b1f 0%, #070708 78%);
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 6%);
-}
-
-.studio-glass {
-  pointer-events: none;
+.passport-cover,
+.passport-page {
   position: absolute;
   inset: 0;
-  background: linear-gradient(125deg, rgb(255 255 255 / 16%) 0%, transparent 34%, transparent 62%, rgb(255 255 255 / 6%) 100%);
 }
 
-.studio-copy {
+.passport-cover {
+  z-index: 2;
+  overflow: hidden;
+  backface-visibility: hidden;
+  transform-origin: left center;
+  border-radius: 10px 16px 16px 10px;
+  background:
+    radial-gradient(80% 70% at 50% 18%, rgb(171 224 84 / 14%) 0%, transparent 62%),
+    linear-gradient(160deg, #1d3a18 0%, #0d1a0c 42%, #081208 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 16%),
+    inset 10px 0 18px rgb(0 0 0 / 28%),
+    0 18px 40px rgb(0 0 0 / 38%);
+  transform: rotateY(0deg);
+  transition: transform 1.15s var(--apple);
+}
+
+.passport-cover::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgb(245 242 234 / 14%);
+  border-radius: 8px 12px 12px 8px;
+}
+
+.passport-cover-inner {
   position: relative;
   z-index: 1;
   display: grid;
   height: 100%;
   place-content: center;
-  gap: 0.9rem;
-  padding: 1.5rem;
+  justify-items: center;
+  gap: 0.85rem;
+  padding: 2rem 1.4rem;
   text-align: center;
 }
 
-.studio-kicker {
+.passport-cover-kicker,
+.passport-cover-sub {
   margin: 0;
-  font-size: 0.62rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgb(245 242 234 / 52%);
+  color: rgb(245 242 234 / 58%);
 }
 
-.studio-title {
+.passport-crest {
+  display: grid;
+  height: 4.4rem;
+  width: 4.4rem;
+  place-items: center;
+  border: 1px solid rgb(171 224 84 / 42%);
+  border-radius: 999px;
+  color: var(--green);
+  box-shadow: inset 0 0 0 5px rgb(171 224 84 / 8%);
+}
+
+.passport-crest span {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.passport-cover h2 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 4.4vw, 3.1rem);
+  font-size: 1.7rem;
   font-weight: 600;
-  letter-spacing: -0.05em;
-  line-height: 1.05;
-  background: var(--gradient-title);
-  background-clip: text;
-  color: transparent;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--offwhite);
 }
 
-.studio-line {
-  margin: 0 auto;
-  max-width: 26rem;
-  font-size: clamp(0.82rem, 1.7vw, 1.05rem);
-  line-height: 1.5;
-  color: rgb(245 242 234 / 68%);
+.passport-page {
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 10px 16px 16px 10px;
+  padding: 1.15rem 1.15rem 2.4rem;
+  background:
+    linear-gradient(180deg, #f4ead3 0%, #e7d7b4 100%);
+  color: #1b1712;
+  box-shadow: inset 0 0 0 1px rgb(90 62 28 / 12%);
 }
 
-.studio-chin {
+.passport-page-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-size: 0.52rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6a5434;
+}
+
+.passport-bio {
   display: grid;
-  height: 2.15rem;
+  grid-template-columns: 5.1rem 1fr;
+  gap: 0.8rem;
+  margin-top: 0.9rem;
+}
+
+.passport-photo {
+  display: grid;
+  aspect-ratio: 3 / 4;
   place-items: center;
-  color: rgb(255 255 255 / 42%);
+  border-radius: 4px;
+  background:
+    linear-gradient(160deg, #2a2a2e 0%, #111113 100%);
+  color: var(--green);
+  box-shadow: 0 8px 16px rgb(40 28 12 / 18%);
 }
 
-.studio-neck {
-  width: 5.2rem;
-  height: 3.4rem;
-  margin-top: -1px;
-  background: linear-gradient(90deg, #2a2a2d 0%, #8a8a90 48%, #2a2a2d 100%);
-  clip-path: polygon(28% 0, 72% 0, 92% 100%, 8% 100%);
+.passport-photo span {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 
-.studio-foot {
-  width: 11.5rem;
-  height: 0.55rem;
+.passport-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem 0.55rem;
+  margin: 0;
+}
+
+.passport-fields .passport-span {
+  grid-column: 1 / -1;
+}
+
+.passport-fields dt {
+  font-size: 0.48rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7a6240;
+}
+
+.passport-fields dd {
+  margin: 0.1rem 0 0;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+  color: #1b1712;
+}
+
+.passport-welcome {
+  margin: 1.05rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 4.6vw, 1.55rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  color: #14210e;
+}
+
+.passport-stamp {
+  position: absolute;
+  right: 1rem;
+  bottom: 1.05rem;
+  display: grid;
+  width: 6.4rem;
+  aspect-ratio: 1;
+  place-content: center;
+  rotate: -12deg;
+  border: 2px solid rgb(250 85 60 / 72%);
   border-radius: 999px;
-  background: linear-gradient(180deg, #7c7c82, #2e2e32);
-  box-shadow: 0 10px 18px rgb(0 0 0 / 45%);
+  color: #fa553c;
+  text-align: center;
+  opacity: 0.86;
 }
 
-.device-caption {
-  margin: 1.1rem 0 0;
+.passport-stamp span,
+.passport-stamp strong {
+  font-size: 0.48rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.passport-stamp strong {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.58rem;
+}
+
+.passport-mrz {
+  position: absolute;
+  left: 1.15rem;
+  right: 1.15rem;
+  bottom: 0.55rem;
+  overflow: hidden;
+  margin: 0;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+  color: rgb(27 23 18 / 42%);
+}
+
+.passport-hint {
+  margin: 0;
   font-size: 0.62rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgb(245 242 234 / 42%);
-  text-align: center;
+  color: rgb(245 242 234 / 48%);
 }
 
-.device-phone {
-  position: relative;
-  width: min(72vw, 18.5rem);
-  aspect-ratio: 9 / 19.4;
-  padding: 9px;
-  border-radius: 42px;
-  background: linear-gradient(180deg, #3a3a3e 0%, #111113 48%, #1c1c20 100%);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 22%),
-    inset 0 -1px 0 rgb(0 0 0 / 55%),
-    0 28px 50px rgb(0 0 0 / 48%);
+.passport-scene.is-open .passport-book {
+  transform: translateX(12%);
 }
 
-.device-phone-screen {
-  position: relative;
-  overflow: hidden;
-  height: 100%;
-  border-radius: 34px;
-  background: radial-gradient(70% 80% at 50% 42%, #1b1b1f 0%, #070708 78%);
-}
-
-.device-island {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  z-index: 2;
-  width: 6.2rem;
-  height: 1.55rem;
-  border-radius: 999px;
-  background: #050506;
-  transform: translateX(-50%);
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 6%);
-}
-
-.device-punch {
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  z-index: 2;
-  width: 0.7rem;
-  height: 0.7rem;
-  border-radius: 50%;
-  background: #050506;
-  transform: translateX(-50%);
-}
-
-.device-home {
-  position: absolute;
-  bottom: 9px;
-  left: 50%;
-  width: 5.2rem;
-  height: 0.28rem;
-  border-radius: 999px;
-  background: rgb(255 255 255 / 28%);
-  transform: translateX(-50%);
-}
-
-.device-btn {
-  position: absolute;
-  background: #2a2a2e;
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 8%);
-}
-
-.device-btn-silent {
-  top: 7.2rem;
-  left: -3px;
-  width: 3px;
-  height: 1.4rem;
-  border-radius: 2px 0 0 2px;
-}
-
-.device-btn-vol {
-  top: 10rem;
-  left: -3px;
-  width: 3px;
-  height: 4.4rem;
-  border-radius: 2px 0 0 2px;
-}
-
-.device-btn-power {
-  top: 11.2rem;
-  right: -3px;
-  width: 3px;
-  height: 3.6rem;
-  border-radius: 0 2px 2px 0;
-}
-
-.device-android {
-  border-radius: 32px;
-  padding: 7px;
-}
-
-.device-android .device-phone-screen {
-  border-radius: 26px;
-}
-
-.device-tablet {
-  width: min(78vw, 34rem);
-  aspect-ratio: 4 / 3;
-  padding: 14px;
-  border-radius: 28px;
-  background: linear-gradient(180deg, #4a4a4e 0%, #1a1a1c 100%);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 22%),
-    0 32px 54px rgb(0 0 0 / 46%);
-}
-
-.device-tablet-screen {
-  position: relative;
-  overflow: hidden;
-  height: 100%;
-  border-radius: 16px;
-  background: radial-gradient(70% 80% at 50% 42%, #1b1b1f 0%, #070708 78%);
-}
-
-.device-tablet-cam {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  width: 0.55rem;
-  height: 0.55rem;
-  border-radius: 50%;
-  background: #111;
-  transform: translateX(-50%);
-}
-
-.device-laptop {
-  width: min(88vw, 46rem);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.device-laptop-lid {
-  width: 100%;
-  padding: 8px 8px 0;
-  border-radius: 16px 16px 8px 8px;
-  background: linear-gradient(180deg, #5a5a5e 0%, #222226 100%);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 22%),
-    0 18px 40px rgb(0 0 0 / 38%);
-}
-
-.device-laptop-screen {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 16 / 10.2;
-  border-radius: 8px 8px 4px 4px;
-  background: radial-gradient(70% 80% at 50% 42%, #1b1b1f 0%, #070708 78%);
-}
-
-.device-laptop-notch {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  z-index: 2;
-  display: grid;
-  width: 5.4rem;
-  height: 0.95rem;
-  place-items: center;
-  border-radius: 0 0 10px 10px;
-  background: #111113;
-  color: rgb(255 255 255 / 42%);
-  transform: translateX(-50%);
-}
-
-.device-laptop-base {
-  width: 108%;
-  height: 0.85rem;
-  display: grid;
-  place-items: center;
-  border-radius: 0 0 18px 18px;
-  background: linear-gradient(180deg, #8a8a90, #3a3a3e);
-  box-shadow: 0 16px 24px rgb(0 0 0 / 42%);
-}
-
-.device-laptop-well {
-  width: 22%;
-  height: 0.28rem;
-  border-radius: 0 0 8px 8px;
-  background: #2a2a2e;
-}
-
-.device-phone .studio-copy,
-.device-tablet .studio-copy {
-  padding: 2.4rem 1.1rem 1.2rem;
-}
-
-.device-phone .studio-title {
-  font-size: clamp(1.35rem, 7vw, 2rem);
-}
-
-.device-phone .studio-line {
-  font-size: 0.86rem;
+.passport-scene.is-open .passport-cover {
+  transform: rotateY(-158deg);
 }
 
 @media (max-width: 640px) {
-  .studio-display {
-    width: min(94vw, 28rem);
+  .passport-book {
+    width: min(88vw, 18.5rem);
   }
 
-  .studio-chin {
-    height: 1.7rem;
-  }
-
-  .studio-neck {
-    width: 3.6rem;
-    height: 2.4rem;
-  }
-
-  .studio-foot {
-    width: 8rem;
-  }
-
-  .device-phone {
-    width: min(78vw, 16.5rem);
-  }
-
-  .device-tablet {
-    width: min(92vw, 26rem);
-    aspect-ratio: 3 / 4;
+  .passport-bio {
+    grid-template-columns: 4.4rem 1fr;
   }
 }
 
