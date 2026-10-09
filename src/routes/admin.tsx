@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import { PageTransition } from "@/components/Motion";
@@ -64,11 +64,11 @@ export const Route = createFileRoute("/admin")({
 });
 
 function AdminPage() {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const isUsersPage = pathname === "/admin/usuarios" || pathname.startsWith("/admin/usuarios/");
   const [authorized, setAuthorized] = useState(false);
   const [checking, setChecking] = useState(true);
-  const [status, setStatus] = useState(
-    "Verificando sua sessão...",
-  );
+  const [status, setStatus] = useState("Verificando sua sessão...");
   const [chapters, setChapters] = useState<ChapterRow[]>([]);
   const [form, setForm] = useState<ChapterForm>(emptyForm());
   const [loading, setLoading] = useState(false);
@@ -82,10 +82,14 @@ function AdminPage() {
       const user = await getSessionUser();
       if (user?.role === "admin") {
         setAuthorized(true);
-        await loadChapters();
+        if (!isUsersPage) await loadChapters();
         setStatus(`Sessão ativa como ${user.email}.`);
       } else {
-        setStatus(user ? "Sua conta não tem acesso de administrador." : "Entre com sua conta para acessar o painel.");
+        setStatus(
+          user
+            ? "Sua conta não tem acesso de administrador."
+            : "Entre com sua conta para acessar o painel.",
+        );
       }
     } catch {
       setStatus("Não foi possível verificar sua sessão.");
@@ -112,14 +116,12 @@ function AdminPage() {
           theme: chapter.theme ?? "",
           cover_image: chapter.coverImage ?? null,
           reading_time: chapter.readingTime ?? 4,
-          published_at:
-            chapter.publishedAt?.toISOString() ?? new Date().toISOString(),
+          published_at: chapter.publishedAt?.toISOString() ?? new Date().toISOString(),
           is_published: chapter.isPublished ?? false,
         })),
       );
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
+      const message = error instanceof Error ? error.message : "Erro desconhecido";
 
       setStatus(`Erro ao carregar capítulos: ${message}`);
     } finally {
@@ -146,9 +148,7 @@ function AdminPage() {
       theme: form.theme.trim() || null,
       coverImage: form.cover_image.trim() || null,
       readingTime: Number(form.reading_time || 4),
-      publishedAt: form.published_at
-        ? new Date(form.published_at)
-        : new Date(),
+      publishedAt: form.published_at ? new Date(form.published_at) : new Date(),
       isPublished: form.is_published,
     };
 
@@ -157,8 +157,7 @@ function AdminPage() {
         data: payload as any,
       });
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
+      const message = error instanceof Error ? error.message : "Erro desconhecido";
 
       setStatus(`Não foi possível salvar: ${message}`);
       return;
@@ -196,23 +195,29 @@ function AdminPage() {
     );
   }
 
+  if (authorized && isUsersPage) {
+    return <Outlet />;
+  }
+
   if (!authorized) {
     return (
       <PageTransition>
         <main className="mx-auto flex min-h-screen max-w-2xl items-center px-4 py-28 sm:px-6">
           <section className="glass-panel w-full rounded-3xl p-8 sm:p-10">
-            <p className="text-[0.66rem] uppercase tracking-[0.3em] text-primary">
-              Área privada
-            </p>
+            <p className="text-[0.66rem] uppercase tracking-[0.3em] text-primary">Área privada</p>
 
-            <h1 className="mt-4 font-display text-3xl font-semibold">
-              Acesso de administrador
-            </h1>
+            <h1 className="mt-4 font-display text-3xl font-semibold">Acesso de administrador</h1>
 
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Entre pela tela de acesso com uma conta de administrador para gerenciar capítulos e usuários.
+              Entre pela tela de acesso com uma conta de administrador para gerenciar capítulos e
+              usuários.
             </p>
-            <a href="/acesso" className="mt-8 inline-flex rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90">Ir para o login</a>
+            <a
+              href="/acesso"
+              className="mt-8 inline-flex rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+            >
+              Ir para o login
+            </a>
             <p className="mt-4 text-sm text-muted-foreground">{status}</p>
           </section>
         </main>
@@ -226,23 +231,35 @@ function AdminPage() {
         <section className="glass-panel rounded-3xl p-8 sm:p-10">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-[0.66rem] uppercase tracking-[0.3em] text-primary">
-                Área privada
-              </p>
+              <p className="text-[0.66rem] uppercase tracking-[0.3em] text-primary">Área privada</p>
 
-              <h1 className="mt-2 font-display text-3xl font-semibold">
-                Gerenciar capítulos
-              </h1>
+              <h1 className="mt-2 font-display text-3xl font-semibold">Gerenciar capítulos</h1>
             </div>
 
-            <nav className="glass flex items-center gap-1 rounded-2xl p-1" aria-label="Administração">
-              <Link to="/admin" className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">Capítulos</Link>
-              <Link to="/admin/usuarios" className="rounded-xl px-4 py-2 text-sm text-muted-foreground transition hover:bg-white/5 hover:text-foreground">Usuários</Link>
+            <nav
+              className="glass flex items-center gap-1 rounded-2xl p-1"
+              aria-label="Administração"
+            >
+              <Link
+                to="/admin"
+                className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+              >
+                Capítulos
+              </Link>
+              <a
+                href="/admin/usuarios"
+                className="rounded-xl px-4 py-2 text-sm text-muted-foreground transition hover:bg-white/5 hover:text-foreground"
+              >
+                Usuários
+              </a>
             </nav>
 
             <button
               type="button"
-              onClick={async () => { await logout(); window.location.href = "/acesso"; }}
+              onClick={async () => {
+                await logout();
+                window.location.href = "/acesso";
+              }}
               className="rounded-2xl border border-white/10 px-4 py-2 text-sm"
             >
               Sair
@@ -251,14 +268,10 @@ function AdminPage() {
 
           <p className="mt-4 text-sm text-muted-foreground">{status}</p>
 
-          <form
-            onSubmit={handleSave}
-            className="mt-8 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]"
-          >
+          <form onSubmit={handleSave} className="mt-8 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
             <div className="space-y-4">
               <label className="block text-sm font-medium">
                 Título
-
                 <input
                   value={form.title}
                   onChange={(e) =>
@@ -275,7 +288,6 @@ function AdminPage() {
 
               <label className="block text-sm font-medium">
                 Slug
-
                 <input
                   value={form.slug}
                   onChange={(e) =>
@@ -291,7 +303,6 @@ function AdminPage() {
 
               <label className="block text-sm font-medium">
                 Ordem do capítulo
-
                 <input
                   type="number"
                   value={form.chapter_order}
@@ -307,7 +318,6 @@ function AdminPage() {
 
               <label className="block text-sm font-medium">
                 Palavra-chave
-
                 <input
                   value={form.keyword}
                   onChange={(e) =>
@@ -323,7 +333,6 @@ function AdminPage() {
 
               <label className="block text-sm font-medium">
                 Tema
-
                 <input
                   value={form.theme}
                   onChange={(e) =>
@@ -341,7 +350,6 @@ function AdminPage() {
             <div className="space-y-4">
               <label className="block text-sm font-medium">
                 Resumo
-
                 <textarea
                   value={form.summary}
                   onChange={(e) =>
@@ -357,7 +365,6 @@ function AdminPage() {
 
               <label className="block text-sm font-medium">
                 Conteúdo
-
                 <textarea
                   value={form.content}
                   onChange={(e) =>
@@ -374,7 +381,6 @@ function AdminPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block text-sm font-medium">
                   Tempo de leitura
-
                   <input
                     type="number"
                     value={form.reading_time}
@@ -415,9 +421,7 @@ function AdminPage() {
 
         <section className="glass-panel mt-6 rounded-3xl p-8 sm:p-10">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-2xl font-semibold">
-              Capítulos cadastrados
-            </h2>
+            <h2 className="font-display text-2xl font-semibold">Capítulos cadastrados</h2>
 
             <button
               type="button"
