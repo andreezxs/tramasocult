@@ -19,8 +19,10 @@ function passportCode(id: string) {
 function initialsOf(name: string) {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   if (!parts.length) return "TO";
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+  const firstPart = parts[0] ?? "";
+  if (parts.length === 1) return firstPart.slice(0, 2).toUpperCase();
+  const lastPart = parts[parts.length - 1] ?? "";
+  return `${firstPart.charAt(0)}${lastPart.charAt(0)}`.toUpperCase();
 }
 
 function lastNameOf(name: string) {
