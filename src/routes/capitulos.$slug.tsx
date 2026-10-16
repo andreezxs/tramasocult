@@ -144,7 +144,7 @@ function ChapterPage() {
             <Link
               to="/capitulos/$slug"
               params={{ slug: previous.slug }}
-              className="glass-panel interactive-panel group p-6 transition-transform duration-500 hover:-translate-y-1"
+              className="glass-panel interactive-panel group p-6 transition-transform duration-500 hover:-translate-y-1 [&_svg]:transition-transform [&_svg]:duration-[480ms] group-hover:[&_svg]:-translate-x-0.5"
             >
               <span className="inline-flex items-center gap-2 text-[0.64rem] uppercase tracking-[0.24em] text-muted-foreground">
                 <ArrowLeft className="h-3 w-3" aria-hidden /> Anterior
@@ -161,7 +161,7 @@ function ChapterPage() {
             <Link
               to="/capitulos/$slug"
               params={{ slug: next.slug }}
-              className="glass-panel interactive-panel group p-6 text-right transition-transform duration-500 hover:-translate-y-1"
+              className="glass-panel interactive-panel group p-6 text-right transition-transform duration-500 hover:-translate-y-1 [&_svg]:transition-transform [&_svg]:duration-[480ms] group-hover:[&_svg]:translate-x-0.5"
             >
               <span className="inline-flex items-center gap-2 text-[0.64rem] uppercase tracking-[0.24em] text-muted-foreground">
                 Próximo <ArrowRight className="h-3 w-3" aria-hidden />

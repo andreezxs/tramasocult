@@ -46,7 +46,9 @@
     "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont,
     sans-serif;
   --font-editorial: "Apple Garamond", "Iowan Old Style", "Georgia", "Times New Roman", serif;
-  --font-reading: "New York", "Iowan Old Style", "Georgia", "Times New Roman", serif;
+  --font-reading:
+    "Arial Narrow", "Arial Condensed", "Helvetica Neue Condensed", "Liberation Sans Narrow",
+    "Arial", "Helvetica Neue", sans-serif;
 }
 
 :root {
@@ -123,6 +125,15 @@
 @layer base {
   * {
     border-color: var(--color-border);
+  }
+
+  svg.lucide {
+    stroke-width: 1.75;
+  }
+
+  .icon-tile svg.lucide,
+  .nav-icon-btn svg.lucide {
+    stroke-width: 1.9;
   }
 
   html {
@@ -366,9 +377,10 @@
 
 @utility reading-body {
   font-family: var(--font-reading);
-  font-size: clamp(1.1rem, 1.1vw + 0.9rem, 1.45rem);
+  font-stretch: condensed;
+  font-size: clamp(1.12rem, 1.1vw + 0.95rem, 1.5rem);
   line-height: 1.8;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.005em;
   color: var(--offwhite);
 }
 
@@ -496,6 +508,74 @@
   border-radius: 999px;
   padding: 0.5rem 0.75rem;
   box-shadow: inset 0 1px 0 oklch(1 0 0 / 8%);
+}
+
+/* ---------------- iOS icon tiles ---------------- */
+
+@utility icon-tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  border: 1px solid oklch(1 0 0 / 11%);
+  border-radius: 1.15rem;
+  background: linear-gradient(160deg, oklch(1 0 0 / 13%) 0%, oklch(1 0 0 / 3.5%) 100%);
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 16%),
+    0 10px 26px -20px oklch(0 0 0 / 80%);
+  color: var(--green);
+  transform: translateZ(0);
+  transition:
+    transform 520ms var(--apple),
+    border-color 420ms ease,
+    box-shadow 520ms ease;
+}
+
+a:hover > .icon-tile,
+.group:hover .icon-tile,
+.interactive-panel:hover .icon-tile {
+  transform: translateY(-2px) scale(1.05);
+  border-color: rgb(171 224 84 / 34%);
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 22%),
+    0 16px 34px -18px rgb(171 224 84 / 44%);
+}
+
+/* ---------------- Link micro-interactions ---------------- */
+
+@utility link-underline {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.2em;
+    height: 1px;
+    background: linear-gradient(90deg, var(--green), var(--orange));
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 480ms var(--apple);
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    transform: scaleX(1);
+  }
+}
+
+@utility link-arrow {
+  & svg {
+    transition: transform 480ms var(--apple);
+  }
+
+  &:hover svg,
+  &:focus-visible svg {
+    transform: translateX(3px);
+  }
 }
 
 @layer base {

@@ -216,8 +216,8 @@ function Home() {
                       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                       className="glass-panel interactive-panel h-full p-6"
                     >
-                      <span className="glass grid h-11 w-11 place-items-center rounded-2xl text-primary">
-                        <h.icon className="h-4.5 w-4.5" aria-hidden />
+                      <span className="icon-tile h-11 w-11 text-primary">
+                        <h.icon className="h-5 w-5" aria-hidden />
                       </span>
                       <h3 className="mt-5 font-display text-lg font-semibold">{h.title}</h3>
                       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{h.text}</p>
@@ -246,7 +246,7 @@ function Home() {
             </p>
             <Link
               to="/sobre"
-              className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+              className="link-underline link-arrow mt-7 inline-flex items-center gap-2 text-sm font-semibold text-primary"
             >
               Conhecer o processo completo
               <ArrowRight className="h-4 w-4" aria-hidden />
@@ -263,7 +263,7 @@ function Home() {
             </h2>
             <Link
               to="/livro"
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+              className="link-underline link-arrow inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
             >
               Ver todos <Clock className="h-3.5 w-3.5" aria-hidden />
             </Link>

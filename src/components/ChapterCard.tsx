@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
+import { ArrowUpRight } from "lucide-react";
 import type { Chapter } from "@/lib/chapters";
 import { TiltCard } from "@/components/Motion";
 
@@ -16,7 +17,19 @@ export function ChapterCard({ chapter }: { chapter: Chapter; index?: number }) {
       >
         <span className="card-sheen" aria-hidden />
 
-        <h3 className="font-display text-xl font-semibold tracking-[-0.05em] sm:text-[1.45rem]">
+        <div className="flex items-start justify-between gap-3">
+          <span className="font-display text-sm font-semibold text-primary/70">
+            {String(chapter.chapter_order).padStart(2, "0")}
+          </span>
+          <span
+            className="icon-tile h-9 w-9 text-primary opacity-60 transition-opacity duration-500 group-hover:opacity-100"
+            aria-hidden
+          >
+            <ArrowUpRight className="h-4 w-4" />
+          </span>
+        </div>
+
+        <h3 className="mt-3 font-display text-xl font-semibold tracking-[-0.05em] sm:text-[1.45rem]">
           {chapter.title}
         </h3>
 

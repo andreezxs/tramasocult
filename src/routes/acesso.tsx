@@ -45,7 +45,7 @@ function AccessPage() {
     <PageTransition>
       <main className="mx-auto flex min-h-[calc(100svh-8rem)] max-w-xl items-center px-4 py-28 sm:px-6">
         <section className="glass-panel w-full p-7 sm:p-10">
-          <span className="glass grid h-12 w-12 place-items-center rounded-2xl text-primary">
+          <span className="icon-tile h-12 w-12 text-primary">
             <LockKeyhole className="h-5 w-5" aria-hidden />
           </span>
           <p className="mt-7 text-[0.64rem] uppercase tracking-[0.3em] text-primary">
@@ -90,7 +90,7 @@ function AccessPage() {
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:brightness-105 disabled:cursor-wait disabled:opacity-60"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:brightness-105 disabled:cursor-wait disabled:opacity-60 [&_svg]:transition-transform [&_svg]:duration-[480ms] hover:[&_svg]:translate-x-0.5"
             >
               {loading ? "Verificando..." : "Entrar na leitura"}
               {!loading && <ArrowRight className="h-4 w-4" aria-hidden />}

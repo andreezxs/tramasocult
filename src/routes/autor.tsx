@@ -65,7 +65,7 @@ function AuthorPage() {
                 href="https://instagram.com/designerandrecmg"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass mt-8 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-transform hover:-translate-y-0.5"
+                className="glass link-arrow mt-8 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-transform hover:-translate-y-0.5"
               >
                 <Instagram className="h-4 w-4" aria-hidden />
                 @designerandrecmg

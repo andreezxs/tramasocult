@@ -4,7 +4,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { Magnetic } from "@/components/Motion";
 
 const base =
-  "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full border border-white/10 px-5 py-2.5 text-sm font-semibold tracking-[-0.01em] shadow-[0_12px_32px_rgba(0,0,0,0.26)] transition-all duration-500 backdrop-blur-xl before:absolute before:inset-0 before:bg-[linear-gradient(135deg,rgba(255,255,255,0.3),transparent_38%,transparent_62%,rgba(255,255,255,0.12))] before:opacity-90 before:content-[''] after:absolute after:inset-y-0 after:-left-1/2 after:w-1/3 after:-skew-x-12 after:bg-white/35 after:blur-md after:opacity-0 after:transition-all after:duration-700 after:content-[''] hover:after:left-[130%] hover:after:opacity-100 active:shadow-[0_6px_18px_rgba(0,0,0,0.3)] sm:px-6 sm:py-3";
+  "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full border border-white/10 px-5 py-2.5 text-sm font-semibold tracking-[-0.01em] shadow-[0_12px_32px_rgba(0,0,0,0.26)] transition-all duration-500 backdrop-blur-xl before:absolute before:inset-0 before:bg-[linear-gradient(135deg,rgba(255,255,255,0.3),transparent_38%,transparent_62%,rgba(255,255,255,0.12))] before:opacity-90 before:content-[''] after:absolute after:inset-y-0 after:-left-1/2 after:w-1/3 after:-skew-x-12 after:bg-white/35 after:blur-md after:opacity-0 after:transition-all after:duration-700 after:content-[''] hover:after:left-[130%] hover:after:opacity-100 active:shadow-[0_6px_18px_rgba(0,0,0,0.3)] [&_svg]:transition-transform [&_svg]:duration-[520ms] [&_svg]:ease-[cubic-bezier(0.32,0.72,0,1)] hover:[&_svg]:translate-x-0.5 focus-visible:[&_svg]:translate-x-0.5 sm:px-6 sm:py-3";
 
 const variants = {
   primary:

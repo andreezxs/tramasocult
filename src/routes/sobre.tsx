@@ -206,7 +206,7 @@ function AboutPage() {
                 href="https://tramasocult.vercel.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary hover:underline"
+                className="link-underline text-primary"
               >
                 tramasocult.vercel.app
               </a>
@@ -217,7 +217,7 @@ function AboutPage() {
                 href="https://instagram.com/designerandrecmg"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary hover:underline"
+                className="link-underline text-primary"
               >
                 @designerandrecmg
               </a>

@@ -81,8 +81,8 @@ function ContactPage() {
                 rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
                 className="glass-panel interactive-panel group flex items-center gap-5 p-6 transition-transform duration-500 hover:-translate-y-1"
               >
-                <span className="glass grid h-11 w-11 shrink-0 place-items-center rounded-2xl text-primary">
-                  <c.icon className="h-4.5 w-4.5" aria-hidden />
+                <span className="icon-tile h-11 w-11 shrink-0 text-primary">
+                  <c.icon className="h-5 w-5" aria-hidden />
                 </span>
                 <span>
                   <span className="block text-[0.64rem] uppercase tracking-[0.24em] text-muted-foreground">
@@ -101,7 +101,7 @@ function ContactPage() {
           <section className="glass-panel mt-10 overflow-hidden p-6 sm:p-8" aria-labelledby="doar">
             <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-center lg:gap-10">
               <div className="flex min-w-0 items-start gap-4">
-                <span className="glass grid h-12 w-12 shrink-0 place-items-center rounded-2xl text-primary">
+                <span className="icon-tile h-12 w-12 shrink-0 text-primary">
                   <Smartphone className="h-5 w-5" aria-hidden />
                 </span>
                 <div className="min-w-0">

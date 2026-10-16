@@ -44,7 +44,7 @@ export function SiteFooter() {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="text-muted-foreground transition-colors hover:text-primary"
+                  className="link-underline text-muted-foreground transition-colors hover:text-primary"
                 >
                   {link.label}
                 </Link>
@@ -67,7 +67,7 @@ export function SiteFooter() {
               >
                 <Mail className="h-3.5 w-3.5" />
               </a>
-              <Link to="/livro" className="footer-cta">
+              <Link to="/livro" className="footer-cta link-arrow">
                 Ler agora
                 <ArrowUpRight className="h-3.5 w-3.5" />
               </Link>
@@ -83,7 +83,7 @@ export function SiteFooter() {
             href="https://instagram.com/vyrecmg"
             target="_blank"
             rel="noopener noreferrer"
-            className="footer-follow"
+            className="footer-follow link-arrow"
           >
             <Instagram className="h-3.5 w-3.5" />
             Siga @vyrecmg para saber mais
